@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+      }
+     /* Hide scrollbar for IE, Edge and Firefox */
+      .no-scrollbar {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+      }
+}
+@layer base {
+
+  input[type=number]::-webkit-inner-spin-button, 
+  input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+  }
+
+  input[type=radio] {
+    @apply bg-amber-700;
+    appearance: none;
+    opacity: 0;
+    -webkit-appearance: none;
+  }
+  input[type=radio]:checked {
+    @apply bg-amber-900;
+  }
+
+  input[type=checkbox],   input[type=checkbox]:hover{
+    @apply bg-amber-600;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+ input[type=checkbox]:focus{
+    @apply bg-amber-700 outline-none;
+  }
+  input[type=checkbox]:checked {
+    @apply bg-amber-900 outline-none;
+  }
+
+  input[type=number]{
+    -moz-appearance: textfield;
+    @apply border-none outline-none paper
+    placeholder:text-amber-950 placeholder:text-opacity-60
+    text-amber-950;
+  }
+
+  input:focus {
+    @apply bg-amber-600/35;
+    border:none;
+    outline:none;
+    outline-width: 0;
+    outline-color: transparent;
+  }
+
+}
+
+
+  @property --scrollbar-track-color {
+
+    syntax:"<color>";
+    inherits:false;  
+    initial-value: theme(colors.amber.800);
+  }
+
+  @property --scrollbar-thumb-color {
+    syntax:"<color>";
+    inherits:false;  
+    initial-value: theme(colors.amber.950);
+  }
+  
+
+:root {
+
+  --text-xxs: 0.5rem;
+  --text-xs: 0.7rem;
+  --text-sm: 0.875rem;
+  --text-md: 0.9rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+
+}
+
+input[type=text], select {
+  @apply border-none outline-none
+    
+}
+
+body *, *::before, *::after{
+	box-sizing: border-box;
+  -ms-overflow-style: none;
+  scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+  scrollbar-width: none;
+}
+
+body {
+	width:100%;
+  height:100vh;
+	@apply  text-md text-justify;
+}
+
+#app {
+  height:100%;
+  width: 100%;
+}
+
+
+@keyframes autoFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity:1;
+  }
+}
+
+.auto-fade-out {
+  animation: autoFade 200ms ease-out reverse;
+}
+.auto-fade {
+  animation: autoFade 200ms ease-out;
+}
+
+div.bar .fill {
+	background:orange;
+	border-radius: var(--rg-radius);
+	height:100%;
+	min-width:0;
+	width:0;
+}

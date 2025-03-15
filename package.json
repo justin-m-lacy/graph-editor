@@ -1,0 +1,35 @@
+{
+  "name": "point-editor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "preview": "vite preview",
+    "build": "vite build"
+  },
+  "keywords": [],
+  "author": "",
+  "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387",
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.14",
+    "@types/node": "^22.13.10",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "rimraf": "^6.0.1",
+    "tailwindcss": "^3.4.17",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "unplugin-auto-import": "^19.1.1",
+    "vite": "^6.2.2",
+    "vite-auto-import-resolvers": "^3.2.1",
+    "vite-plugin-html": "^3.2.2"
+  },
+  "dependencies": {
+    "@vueuse/core": "^13.0.0",
+    "eventemitter3": "^5.0.1",
+    "pinia": "^3.0.1",
+    "vue": "^3.5.13"
+  }
+}
