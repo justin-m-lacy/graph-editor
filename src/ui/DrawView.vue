@@ -2,6 +2,7 @@
 import { shallowRef } from 'vue';
 import Point from './Point.vue';
 import { usePtStore } from '@/store/point-store';
+import PtInfo from './PtInfo.vue';
 
 const scale = shallowRef<number>(1);
 const dx = shallowRef<number>(0);
@@ -49,6 +50,8 @@ const clickPt = (e: MouseEvent) => {
 		 @drop="onDrop" @dragover.prevent
 		 @click="clickPt">
 
+		<PtInfo />
 		<Point v-for="p in ptStore.points" :key="p.id" :pt="p" />
+
 	</div>
 </template>

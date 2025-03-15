@@ -17,12 +17,12 @@ export const makeLink = (json: string, saveName: string) => {
 
 }
 
-export const readJsonFile = (fileList: FileList) => {
+export const readJsonFile = <T extends any>(fileList: FileList) => {
 
 	const file = fileList[0];
 	if (!file) return;
 
-	return new Promise((res, rej) => {
+	return new Promise<T>((res, rej) => {
 
 		const reader = new FileReader();
 		reader.onload = (e) => {

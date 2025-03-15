@@ -13,6 +13,11 @@ export const usePtStore = defineStore('points', () => {
 
 	});
 
+	const setPoints = (pts: TPoint[]) => {
+		points.value = pts;
+		selIndex.value = -1;
+	}
+
 	const deselect = () => selIndex.value = -1;
 
 	const add = (pt: TPoint) => {
@@ -55,6 +60,7 @@ export const usePtStore = defineStore('points', () => {
 		remove,
 		selected,
 		select,
+		setPoints
 
 	}
 

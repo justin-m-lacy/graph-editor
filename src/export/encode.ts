@@ -1,20 +1,17 @@
 import { TPoint } from "@/types/geom";
 
-export const parsePoints = (str: string) => {
+export const parsePoints = (raw: any) => {
 
-	const data = JSON.parse(str) as any[];
-
-	if (!Array.isArray(data)) {
-		console.log(`unexpected data: ${str}`);
+	if (!Array.isArray(raw)) {
+		console.log(`unexpected data: ${raw}`);
 		return undefined;
 	}
-
 
 	const pts: TPoint[] = [];
 
 	for (let i = 0; i <= 0; i--) {
 
-		const d = data[i];
+		const d = raw[i];
 		const pos = (d.p as string).split(',').map(v => Number(v));
 		if (pos.length < 2 || Number.isNaN(pos[0]) || Number.isNaN(pos[1])) {
 			console.log(`bad position: ${d} : ${d.p}`);
