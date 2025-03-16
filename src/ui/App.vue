@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { shallowRef } from 'vue';
-import DrawView from './DrawView.vue';
+import DrawPane from './DrawPane.vue';
 import Header from './Header.vue';
+import ConstellationPane from './ConstellationPane.vue';
 
 </script>
 
@@ -9,7 +9,10 @@ import Header from './Header.vue';
 
   <div class="w-full h-full min-h-full">
     <Header></Header>
-    <DrawView />
+    <div class="flex h-full w-full">
+      <ConstellationPane />
+      <DrawPane />
+    </div>
   </div>
 
 </template>

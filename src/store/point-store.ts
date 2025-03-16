@@ -1,57 +1,61 @@
+import { events } from "@/store/events";
 import { TPoint } from "@/types/geom";
 import { defineStore } from "pinia";
 
 export const usePtStore = defineStore('points', () => {
 
-	const points = ref<TPoint[]>([]);
-	const selIndex = ref<number>(-1);
+	const points = ref<Map<string, TPoint>>(new Map());
+	const selUid = ref<string | null>(null);
 
 	const selected = computed(() => {
-		const ind = selIndex.value;
-		if (ind < 0 || ind >= points.value.length) return null;
-		return points.value[ind];
-
+		return selUid.value ? points.value.get(selUid.value) ?? null : null;
 	});
 
 	const setPoints = (pts: TPoint[]) => {
-		points.value = pts;
-		selIndex.value = -1;
+
+		points.value.clear();
+		for (const pt of pts) {
+			points.value.set(pt.uid, pt);
+		}
+		deselect();
 	}
 
-	const deselect = () => selIndex.value = -1;
+	const deselect = () => selUid.value = null;
 
-	const add = (pt: TPoint) => {
+	const create = (pt: TPoint) => {
 
-		points.value.push(pt);
-		selIndex.value = points.value.length - 1;
-
-	}
-
-	const get = (id: string) => {
-		return points.value.find(p => p.uid == id);
-	}
-
-	const remove = (id?: string) => {
-
-		const ind = id ? points.value.findIndex(p => p.uid == id) : selIndex.value;
-		if (ind < 0 || ind >= points.value.length) return;
-
-		selIndex.value = -1;
-		points.value.splice(ind, 1);
+		points.value.set(pt.uid, pt);
+		selUid.value = pt.uid;
 
 	}
 
-	const select = (id: TPoint | string) => {
+	const get = (uid: string) => {
+		return points.value.get(uid);
+	}
 
-		id = typeof id === 'object' ? id.uid : id;
-		const ind = points.value.findIndex(p => p.uid == id);
-		selIndex.value = ind;
+	const remove = (uid?: string | null) => {
 
+		uid ??= selUid.value;
+		if (!uid) return;
+
+		const cur = points.value.get(uid);
+		if (!cur) return;
+
+		points.value.delete(uid);
+
+		if (selUid.value == uid) deselect();
+
+		events.emit('delete-star', uid);
+
+	}
+
+	const select = (uid: string | null) => {
+		selUid.value = uid;
 	}
 
 	return {
 
-		add,
+		create,
 		deselect,
 		get,
 		get points() { return points; },

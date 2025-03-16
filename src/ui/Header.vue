@@ -8,13 +8,11 @@ const ptStore = usePtStore();
 
 const expPoints = () => {
 
-	const json = encodePoints(ptStore.points);
+	const json = encodePoints(Array.from(ptStore.points.values()));
 
 }
 
 const importPoints = () => {
-
-	const json = encodePoints(ptStore.points);
 
 }
 
