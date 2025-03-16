@@ -47,8 +47,6 @@ export const usePtStore = defineStore('points', () => {
 		const ind = points.value.findIndex(p => p.uid == id);
 		selIndex.value = ind;
 
-
-
 	}
 
 	return {

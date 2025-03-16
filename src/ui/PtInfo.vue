@@ -55,12 +55,13 @@ watch(() => props.pt, (sel) => {
 <template>
 	<div ref="elRef" class="absolute flex flex-col flex-wrap
 	border-t-8 border-t-amber-900 rounded-t-lg rounded-b-sm pb-1 p-1
-	 bg-amber-600/40 min-w-40 text-amber-950
+	 bg-earth-200 min-w-40 text-amber-950
 	 " @click.stop>
 
 		<input v-model="pt.id" placeholder="id" @click.stop
-			   class="bg-amber-700/40 px-1 text-amber-950 placeholder-amber-950/50">
-		<div>{{ pt.x }}, {{ pt.y }}</div>
+			   class="bg-amber-700/40 px-1 text-amber-950 placeholder-amber-950/70">
+		<div class="flex items-center font-semibold">{{ pt.x }}, {{ pt.y }}</div>
+		<input type="color" class="p-0 m-[2px] w-full" v-model="pt.color">
 		<button type="button" class="bg-rose-900/50" @click="emit('remove', pt.uid)">🗑</button>
 	</div>
 </template>

@@ -2,7 +2,6 @@
 import { shallowRef } from 'vue';
 import DrawView from './DrawView.vue';
 import Header from './Header.vue';
-import PtInfo from './PtInfo.vue';
 
 </script>
 
