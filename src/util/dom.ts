@@ -8,13 +8,31 @@ const PadY = 12;
  * @param pt - destination point.
  * @returns 
  */
-export const toLocalPos = <T extends { x?: number, y?: number }>(evt: MouseEvent | DragEvent, pt: T, parent?: HTMLElement) => {
+export const toLocalPos = <T extends { x?: number, y?: number }>(
+	evt: MouseEvent | DragEvent, pt: T,
+	{
+		parent,
+		scale = 1,
+		tx = 0,
+		ty = 0
+	}: {
+		parent?: HTMLElement,
+		scale?: number,
+		tx?: number,
+		ty?: number
+	} = {}) => {
 
 	parent ??= (evt.target as HTMLElement).parentElement ?? document.body;
 	const parentRect = parent.getBoundingClientRect();
 
-	pt.x = evt.pageX - parentRect.x;
-	pt.y = evt.pageY - parentRect.y;
+	/*	console.log(`page: ${evt.pageX}`);
+		console.log(`parent: ${parentRect.x}`);
+		console.log(`scale: ${scale}`);*/
+
+	pt.x = (evt.pageX - parentRect.x) / scale;
+	pt.y = (evt.pageY - parentRect.y) / scale;
+
+	return pt;
 
 }
 
