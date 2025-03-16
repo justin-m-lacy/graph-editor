@@ -1,16 +1,16 @@
 import { events } from "@/store/events";
-import { Constellation } from "@/types/geom";
+import { TCluster } from "@/types/geom";
 import { defineStore } from "pinia";
 
-export const useConstellations = defineStore('constellations', () => {
+export const useClusters = defineStore('clusters', () => {
 
-	const map = ref<Map<string, Constellation>>(new Map());
+	const map = ref<Map<string, TCluster>>(new Map());
 
 	const selUid = ref<string | null>(null);
 
 	const selected = computed(() => selUid.value ? map.value.get(selUid.value) ?? null : null);
 
-	const setList = (arr: Constellation[]) => {
+	const setList = (arr: TCluster[]) => {
 		map.value.clear();
 		for (const con of arr) {
 			map.value.set(con.uid, con);
@@ -24,7 +24,7 @@ export const useConstellations = defineStore('constellations', () => {
 		selUid.value = uid ?? null;
 	}
 
-	const addPt = (con: Constellation, uid: string) => {
+	const addPt = (con: TCluster, uid: string) => {
 		if (!con.stars.includes(uid)) {
 			con.stars.push(uid);
 		}

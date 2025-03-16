@@ -2,7 +2,7 @@ import { events } from "@/store/events";
 import { TPoint } from "@/types/geom";
 import { defineStore } from "pinia";
 
-export const usePtStore = defineStore('points', () => {
+export const usePoints = defineStore('points', () => {
 
 	const points = ref<Map<string, TPoint>>(new Map());
 	const selUid = ref<string | null>(null);
@@ -22,10 +22,19 @@ export const usePtStore = defineStore('points', () => {
 
 	const deselect = () => selUid.value = null;
 
-	const create = (pt: TPoint) => {
+	const create = (pt: Partial<TPoint>) => {
 
-		points.value.set(pt.uid, pt);
-		selUid.value = pt.uid;
+		const obj = {
+			...pt
+		};
+		obj.uid = window.crypto.randomUUID();
+		obj.id = pt.id ?? 'new star';
+		obj.x = pt.x ?? 100;
+		obj.y = pt.y ?? 100;
+		obj.r ??= 2;
+
+		points.value.set(obj.uid, obj as TPoint);
+		selUid.value = obj.uid;
 
 	}
 

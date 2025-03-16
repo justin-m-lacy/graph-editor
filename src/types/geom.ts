@@ -9,7 +9,7 @@ export interface TPoint {
 
 	x: number, y: number
 }
-export interface Constellation {
+export interface TCluster {
 
 	uid: string;
 	id: string;

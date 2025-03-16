@@ -2,6 +2,22 @@
 const PadX = 12;
 const PadY = 12;
 
+/**
+ * 
+ * @param evt 
+ * @param pt - destination point.
+ * @returns 
+ */
+export const toLocalPos = <T extends { x?: number, y?: number }>(evt: MouseEvent | DragEvent, pt: T, parent?: HTMLElement) => {
+
+	parent ??= (evt.target as HTMLElement).parentElement ?? document.body;
+	const parentRect = parent.getBoundingClientRect();
+
+	pt.x = evt.pageX - parentRect.x;
+	pt.y = evt.pageY - parentRect.y;
+
+}
+
 export const positionElm = (el: HTMLElement | undefined, x: number, y: number) => {
 
 	if (!el) return;

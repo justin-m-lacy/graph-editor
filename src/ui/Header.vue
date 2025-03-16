@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { encodePoints, parsePoints } from '@/export/encode';
 import { readJsonFile } from '@/export/files';
-import { usePtStore } from '@/store/point-store';
+import { usePoints } from '@/store/point-store';
 import { TPoint } from '@/types/geom';
 
-const ptStore = usePtStore();
+const ptStore = usePoints();
 
 const expPoints = () => {
 
