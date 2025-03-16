@@ -39,7 +39,7 @@ const clickPt = (e: MouseEvent) => {
 	const ox = e.offsetX;
 
 	ptStore.add(
-		{ id: window.crypto.randomUUID(), name: '', x: cx, y: e.clientY }
+		{ uid: window.crypto.randomUUID(), id: '', x: cx, y: e.clientY }
 	);
 
 }
@@ -50,8 +50,8 @@ const clickPt = (e: MouseEvent) => {
 		 @drop="onDrop" @dragover.prevent
 		 @click="clickPt">
 
-		<PtInfo />
-		<Point v-for="p in ptStore.points" :key="p.id" :pt="p" />
+		<PtInfo v-if="ptStore.selected" :pt="ptStore.selected" @remove="ptStore.remove" />
+		<Point v-for="p in ptStore.points" :key="p.uid" :pt="p" />
 
 	</div>
 </template>

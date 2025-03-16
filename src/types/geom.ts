@@ -1,6 +1,6 @@
-export type TPoint = {
+export interface TPoint {
+	uid: string,
 	id: string,
-	name: string,
 
 	x: number, y: number
 }

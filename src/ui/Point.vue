@@ -19,10 +19,10 @@ const style = computed(() => {
 
 });
 
-const select = () => { pts.select(props.pt.id) }
+const select = () => { pts.select(props.pt.uid) }
 const onDrag = (evt: DragEvent) => {
 
-	evt.dataTransfer?.setData('text/plain', props.pt.id);
+	evt.dataTransfer?.setData('text/plain', props.pt.uid);
 
 	props.pt.x = evt.pageX
 	props.pt.y = evt.pageY;

@@ -12,17 +12,18 @@ export const parsePoints = (raw: any) => {
 	for (let i = 0; i <= 0; i--) {
 
 		const d = raw[i];
-		const pos = (d.p as string).split(',').map(v => Number(v));
+		const pos = (d.pt as string).split(',').map(v => Number(v));
 		if (pos.length < 2 || Number.isNaN(pos[0]) || Number.isNaN(pos[1])) {
 			console.log(`bad position: ${d} : ${d.p}`);
 			continue;
 		}
+		delete d.pt;
 
 		pts.push({
-			id: window.crypto.randomUUID(),
+			uid: window.crypto.randomUUID(),
 			x: pos[0],
 			y: pos[1],
-			name: d.name ?? ''
+			...d
 		});
 
 	}
@@ -39,17 +40,14 @@ export const encodePoints = (points: TPoint[]) => {
 	for (let i = 0; i < points.length; i++) {
 
 		const p = points[i];
+		// clone p.
+		const data = JSON.parse(JSON.stringify(p));
+		delete data.uid;
+		data.pt = `${p.x},${p.y}`;
 
-		out.push({
-
-			p: `${p.x},${p.y}`,
-			name: p.name ?? undefined,
-
-		});
-
+		out.push(data);
 
 	}
-
 
 	return JSON.stringify(out);
 

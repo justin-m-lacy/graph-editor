@@ -28,12 +28,12 @@ export const usePtStore = defineStore('points', () => {
 	}
 
 	const get = (id: string) => {
-		return points.value.find(p => p.id == id);
+		return points.value.find(p => p.uid == id);
 	}
 
 	const remove = (id?: string) => {
 
-		const ind = id ? points.value.findIndex(p => p.id == id) : selIndex.value;
+		const ind = id ? points.value.findIndex(p => p.uid == id) : selIndex.value;
 		if (ind < 0 || ind >= points.value.length) return;
 
 		selIndex.value = -1;
@@ -43,8 +43,8 @@ export const usePtStore = defineStore('points', () => {
 
 	const select = (id: TPoint | string) => {
 
-		id = typeof id === 'object' ? id.id : id;
-		const ind = points.value.findIndex(p => p.id == id);
+		id = typeof id === 'object' ? id.uid : id;
+		const ind = points.value.findIndex(p => p.uid == id);
 		selIndex.value = ind;
 
 

@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { usePtStore } from '@/store/point-store';
 import { TPoint } from '@/types/geom';
+
+const props = defineProps<{
+	pt: TPoint
+}>();
+
+const emit = defineEmits<{
+	(e: 'remove', id: string): void;
+}>();
 
 const PadX = 12;
 const PadY = 12;
 
 const elRef = shallowRef<HTMLElement>();
-
-const ptStore = usePtStore();
-
-const pt = shallowRef();
 
 const positionAt = (x: number, y: number) => {
 
@@ -30,7 +33,7 @@ const positionAt = (x: number, y: number) => {
 
 	if (y < PadY) y = PadY;
 	else if (y + rect.height > height - PadY) {
-		y = height - rect.height - PadY;
+		y -= (rect.height + PadY);
 	}
 
 	style.left = `${x}px`;
@@ -40,21 +43,24 @@ const positionAt = (x: number, y: number) => {
 }
 
 
-watch(() => ptStore.selected, (sel) => {
+watch(() => props.pt, (sel) => {
 
-	pt.value = sel;
 	if (sel) {
 		nextTick(() => positionAt(sel.x, sel.y));
 	}
 
-}, { immediate: true });
+}, { immediate: true, deep: true });
 
 </script>
 <template>
-	<div ref="elRef" class="absolute bg-amber-600/40 w-40 flex flex-col flex-wrap" v-if="pt">
+	<div ref="elRef" class="absolute flex flex-col flex-wrap
+	border-t-8 border-t-amber-900 rounded-t-lg rounded-b-sm pb-1 p-1
+	 bg-amber-600/40 min-w-40 text-amber-950
+	 " @click.stop>
 
-		<button type="button" @click="ptStore.remove(pt.id)">🗑</button>
-		<input v-model="pt.name" placeholder="Name">
+		<input v-model="pt.id" placeholder="id" @click.stop
+			   class="bg-amber-700/40 px-1 text-amber-950 placeholder-amber-950/50">
 		<div>{{ pt.x }}, {{ pt.y }}</div>
+		<button type="button" class="bg-rose-900/50" @click="emit('remove', pt.uid)">🗑</button>
 	</div>
 </template>

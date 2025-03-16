@@ -68,7 +68,7 @@ const fileDrag = (e: DragEvent) => {
 
 </script>
 <template>
-	<div class="w-full">
+	<div class="w-full px-4 bg-slate-900 text-slate-100">
 		<button type="button" @click="expPoints">Export</button>
 		<button type="button" class="btn" id="drop-file"
 				@click.stop.prevent="fileInput?.click()"
