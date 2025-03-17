@@ -29,8 +29,9 @@ export const toLocalPos = <T extends { x?: number, y?: number }>(
 		console.log(`parent: ${parentRect.x}`);
 		console.log(`scale: ${scale}`);*/
 
-	pt.x = (evt.pageX - parentRect.x) / scale;
-	pt.y = (evt.pageY - parentRect.y) / scale;
+	console.log(`parent: ${parentRect.x}`);
+	pt.x = (evt.clientX - parentRect.x) / scale;
+	pt.y = (evt.clientY - parentRect.y) / scale;
 
 	return pt;
 

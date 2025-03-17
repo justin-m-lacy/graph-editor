@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { shallowRef } from 'vue';
 import Point from './Point.vue';
 import { usePoints } from '@/store/point-store';
-import PointPane from './PointPane.vue';
 import { TPoint } from '@/types/geom';
 import { useClusters } from '@/store/clusters';
 import { useCanvasStore } from '@/store/canvas-store';
-import { toLocalPos } from '@/util/dom';
 
 const pointStore = usePoints();
 const clusters = useClusters();
@@ -41,7 +38,6 @@ const onDrop = (evt: DragEvent) => {
 
 const onWheel = (e: WheelEvent) => {
 
-	console.log(`delt: ${e.deltaY}`)
 	let s = e.deltaY / 1000 + canvasStore.scale;
 	s = Math.max(0.5, Math.min(1.5, s));
 
@@ -69,18 +65,18 @@ const addCluster = (uid: string) => {
 
 </script>
 <template>
-	<div class="relative w-full h-full min-h-full min-w-full bg-mana-950"
-		 :style="canvasStore.canvasStyle()"
-		 @wheel.prevent="onWheel"
-		 @drop="onDrop" @dragover.prevent
-		 @click="clickPt">
+	<div class="absolute w-full h-full overflow-hidden bg-mana-100">
+		<div class="relative w-full h-full min-h-full min-w-full border border-black "
+			 :style="canvasStore.canvasStyle()"
+			 @wheel.prevent="onWheel"
+			 @drop="onDrop" @dragover.prevent
+			 @click="clickPt">
 
-		<PointPane class="absolute z-100" v-if="pointStore.selected" :pt="pointStore.selected"
-				   @remove="pointStore.remove" />
-		<Point v-for="[_, p] in pointStore.points" :key="p.uid" :pt="p"
-			   @click.stop="pointStore.select(p.uid)"
-			   @click.shift="addCluster(p.uid)"
-			   @dragstart.stop="onDragStart($event, p)" @drag.stop="onDragPt($event, p)" />
+			<Point v-for="[_, p] in pointStore.points" :key="p.uid" :pt="p"
+				   @click.stop="pointStore.select(p.uid)"
+				   @click.shift="addCluster(p.uid)"
+				   @dragstart.stop="onDragStart($event, p)" @drag.stop="onDragPt($event, p)" />
 
+		</div>
 	</div>
 </template>
