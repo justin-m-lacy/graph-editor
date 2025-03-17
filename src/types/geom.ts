@@ -1,6 +1,5 @@
 
 export interface TPoint {
-	uid: string,
 	id: string,
 
 	color?: string,
@@ -11,7 +10,6 @@ export interface TPoint {
 }
 export interface TCluster {
 
-	uid: string;
 	id: string;
 
 	color?: string;

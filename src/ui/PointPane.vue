@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { TPoint } from '@/types/geom';
-import { round } from '../util/dom';
 import { positionElm } from "@/util/dom";
+import { round } from '../util/dom';
 
 const props = defineProps<{
 	pt: TPoint
@@ -33,6 +33,6 @@ watch(() => props.pt, (sel) => {
 		<div class="flex items-center font-semibold text-sm">{{ round(pt.x) }}, {{ round(pt.y) }}</div>
 		<input type="color" class="p-0 m-[2px] w-full" v-model="pt.color">
 		<input type="number" v-model="pt.r">
-		<button type="button" class="bg-rose-900/50" @click="emit('remove', pt.uid)">🗑</button>
+		<button type="button" class="bg-rose-900/50" @click="emit('remove', pt.id)">🗑</button>
 	</div>
 </template>

@@ -12,8 +12,8 @@ const canvasStore = useCanvasStore();
 const optsStore = useOptions();
 
 const onDragStart = (evt: DragEvent, pt: TPoint) => {
-	pointStore.select(pt.uid);
-	evt.dataTransfer?.setData('text/plain', pt.uid);
+	pointStore.select(pt.id);
+	evt.dataTransfer?.setData('text/plain', pt.id);
 }
 
 const onDragPt = (evt: DragEvent, pt: TPoint) => {
@@ -58,10 +58,10 @@ const clickPt = (e: MouseEvent) => {
 
 }
 
-const addCluster = (uid: string) => {
+const addCluster = (id: string) => {
 
 	const con = clusters.selected ?? clusters.create();
-	clusters.addPt(con, uid);
+	clusters.addPt(con, id);
 
 }
 
@@ -92,10 +92,10 @@ const starCls = computed(() => {
 			 @drop="onDrop" @dragover.prevent
 			 @click="clickPt">
 
-			<Point v-for="[_, p] in pointStore.points" :key="p.uid" :pt="p"
+			<Point v-for="[_, p] in pointStore.points" :key="p.id" :pt="p"
 				   :star-style="starStyle"
-				   @click.stop="pointStore.select(p.uid)"
-				   @click.shift="addCluster(p.uid)"
+				   @click.stop="pointStore.select(p.id)"
+				   @click.shift="addCluster(p.id)"
 				   @dragstart.stop="onDragStart($event, p)" @drag.stop="onDragPt($event, p)" />
 
 		</div>

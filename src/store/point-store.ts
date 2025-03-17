@@ -1,5 +1,6 @@
 import { events } from "@/store/events";
 import { TPoint } from "@/types/geom";
+import { NextId } from "@/util/id";
 import { defineStore } from "pinia";
 
 export const usePoints = defineStore('points', () => {
@@ -15,7 +16,7 @@ export const usePoints = defineStore('points', () => {
 
 		points.value.clear();
 		for (const pt of pts) {
-			points.value.set(pt.uid, pt);
+			points.value.set(pt.id, pt);
 		}
 		deselect();
 	}
@@ -27,39 +28,38 @@ export const usePoints = defineStore('points', () => {
 		const obj = {
 			...pt
 		};
-		obj.uid = window.crypto.randomUUID();
-		obj.id = pt.id ?? 'new star';
+		obj.id = `star${NextId('star')}`
 		obj.x = pt.x ?? 100;
 		obj.y = pt.y ?? 100;
 		obj.r ??= 2;
 
-		points.value.set(obj.uid, obj as TPoint);
-		selUid.value = obj.uid;
+		points.value.set(obj.id, obj as TPoint);
+		selUid.value = obj.id;
 
 	}
 
-	const get = (uid: string) => {
-		return points.value.get(uid);
+	const get = (id: string) => {
+		return points.value.get(id);
 	}
 
-	const remove = (uid?: string | null) => {
+	const remove = (id?: string | null) => {
 
-		uid ??= selUid.value;
-		if (!uid) return;
+		id ??= selUid.value;
+		if (!id) return;
 
-		const cur = points.value.get(uid);
+		const cur = points.value.get(id);
 		if (!cur) return;
 
-		points.value.delete(uid);
+		points.value.delete(id);
 
-		if (selUid.value == uid) deselect();
+		if (selUid.value == id) deselect();
 
-		events.emit('delete-star', uid);
+		events.emit('delete-star', id);
 
 	}
 
-	const select = (uid: string | null) => {
-		selUid.value = uid;
+	const select = (id: string | null) => {
+		selUid.value = id;
 	}
 
 	return {

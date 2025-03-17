@@ -1,55 +1,55 @@
 import { events } from "@/store/events";
 import { TCluster } from "@/types/geom";
+import { NextId } from "@/util/id";
 import { defineStore } from "pinia";
 
 export const useClusters = defineStore('clusters', () => {
 
 	const map = ref<Map<string, TCluster>>(new Map());
 
-	const selUid = ref<string | null>(null);
+	const selId = ref<string | null>(null);
 
-	const selected = computed(() => selUid.value ? map.value.get(selUid.value) ?? null : null);
+	const selected = computed(() => selId.value ? map.value.get(selId.value) ?? null : null);
 
 	const setList = (arr: TCluster[]) => {
 		map.value.clear();
 		for (const con of arr) {
-			map.value.set(con.uid, con);
+			map.value.set(con.id, con);
 		}
 		deselect();
 	}
 
-	const deselect = () => selUid.value = null;
+	const deselect = () => selId.value = null;
 
-	const select = (uid?: string) => {
-		selUid.value = uid ?? null;
+	const select = (id?: string) => {
+		selId.value = id ?? null;
 	}
 
-	const addPt = (con: TCluster, uid: string) => {
-		if (!con.stars.includes(uid)) {
-			con.stars.push(uid);
+	const addPt = (con: TCluster, id: string) => {
+		if (!con.stars.includes(id)) {
+			con.stars.push(id);
 		}
 	}
 
-	function remove(uid: string) {
+	function remove(id: string) {
 
-		const con = map.value.get(uid);
+		const con = map.value.get(id);
 		if (!con) return;
-		map.value.delete(uid);
+		map.value.delete(id);
 
-		if (selUid.value == uid) deselect();
+		if (selId.value == id) deselect();
 
 	}
 
 	function create() {
 
 		const con = {
-			uid: window.crypto.randomUUID(),
-			id: 'con' + map.value.size,
+			id: `con${NextId('con')}`,
 			stars: <string[]>[]
 		};
 
-		map.value.set(con.uid, con);
-		selUid.value = con.uid;
+		map.value.set(con.id, con);
+		selId.value = con.id;
 
 		return con;
 

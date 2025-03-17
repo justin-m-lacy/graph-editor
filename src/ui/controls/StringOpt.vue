@@ -11,6 +11,6 @@ const opts = useOptions();
 </script>
 <template>
 	<input type="text" :placeholder="placeholder ?? opt"
-		   :value="opts.getVal(opt)"
-		   @change="opts.setVal(opt, ($event.target as HTMLInputElement).value)">
+		   :value="opts.getVal(opt as any)"
+		   @change="opts.setVal(opt as any, ($event.target as HTMLInputElement).value)">
 </template>

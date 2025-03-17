@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useClusters } from '@/store/clusters';
-import { TPoint } from '../types/geom';
 import { usePoints } from '@/store/point-store';
+import { TPoint } from '../types/geom';
 
 const clusters = useClusters();
 const pointStore = usePoints();
@@ -31,16 +31,16 @@ const curStars = computed(() => {
 const starIdClass = (s: TPoint) => {
 
 	return {
-		'font-bold': s.uid == pointStore.selected?.uid
+		'font-bold': s.id == pointStore.selected?.id
 	}
 }
 
-const select = (uid: string) => {
-	clusters.select(uid);
+const select = (id: string) => {
+	clusters.select(id);
 }
 
-const remove = (uid: string) => {
-	clusters.remove(uid);
+const remove = (id: string) => {
+	clusters.remove(id);
 }
 
 
@@ -67,21 +67,21 @@ watch(() => clusters.selected, (sel) => {
 			</div>
 
 			<button type="button" class="bg-rose-900/50 font-bold py-1 border-t border-blue-950 border-b"
-					@click="remove(selected.uid)">🗑 Delete
+					@click="remove(selected.id)">🗑 Delete
 				Cluster</button>
 
 			<div class="text-sm font-bold px-2 bg-amber-700/40 border-b border-blue-950">Stars</div>
-			<div v-for="s in curStars" :key="s.uid" class="px-2 border-b border-blue-950"
+			<div v-for="s in curStars" :key="s.id" class="px-2 border-b border-blue-950"
 				 :class="starIdClass(s)">
 				<div>{{ s.id }}</div>
 			</div>
 		</div>
 
 		<div class="font-bold px-1 bg-amber-700/40 border-b border-blue-950 ">constellations</div>
-		<div v-for="[uid, con] in clusters.map" class="border-b border-blue-950">
-			<input type="text" class="px-2 w-full" @click="select(uid)" :key="uid"
+		<div v-for="[id, con] in clusters.map" class="border-b border-blue-950">
+			<input type="text" class="px-2 w-full" @click="select(id)" :key="id"
 				   v-model="con.id"
-				   :class="uid == selected?.uid ? 'font-bold' : ''">
+				   :class="id == selected?.id ? 'font-bold' : ''">
 		</div>
 
 	</div>

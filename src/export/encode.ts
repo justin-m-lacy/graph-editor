@@ -20,7 +20,6 @@ export const parsePoints = (raw: any) => {
 		delete d.pt;
 
 		pts.push({
-			uid: window.crypto.randomUUID(),
 			x: pos[0],
 			y: pos[1],
 			...d
@@ -42,7 +41,9 @@ export const encodePoints = (points: TPoint[]) => {
 		const p = points[i];
 		// clone p.
 		const data = JSON.parse(JSON.stringify(p));
-		delete data.uid;
+		delete data.x;
+		delete data.y;
+
 		data.pt = `${p.x},${p.y}`;
 
 		out.push(data);

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useOptions } from '@/store/options-store';
 import ColorOpt from './controls/ColorOpt.vue';
+import NumberOpt from './controls/NumberOpt.vue';
 
 
 const optsStore = useOptions();
@@ -11,6 +12,7 @@ const optsStore = useOptions();
 
 		<ColorOpt opt="bgColor" />
 		<ColorOpt opt="ptColor" />
+		<NumberOpt opt="blur" />
 
 
 	</div>
