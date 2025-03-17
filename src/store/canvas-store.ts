@@ -7,11 +7,9 @@ export const useCanvasStore = defineStore('canvas', () => {
 	const tx = shallowRef<number>(0);
 	const ty = shallowRef<number>(0);
 
-	const canvasStyle = () => {
-		return {
-			transform: `scale(${scale.value}) translate(${-tx.value}px,${-ty.value}px)`
-		}
-	}
+	const canvasStyle = () => ({
+		transform: `scale(${scale.value}) translate(${-tx.value}px,${-ty.value}px)`
+	});
 
 	const toLocal = <T extends { x?: number, y?: number }>(
 		evt: MouseEvent | DragEvent, pt: T, parent?: HTMLElement) => {

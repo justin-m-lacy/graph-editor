@@ -20,10 +20,15 @@ export const useOptions = defineStore('options', () => {
 	const bgColor = makeOpt(opts, 'bgColor');
 	const ptColor = makeOpt(opts, 'ptColor');
 
-
-
 	return {
 
+		opts,
+		setVal<T extends any>(s: string, v: T) {
+			opts.value[s] = v;
+		},
+		getVal<T extends any>(s: string) {
+			return opts.value[s] as T | undefined
+		}
 	}
 
 });

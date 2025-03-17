@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import Point from './Point.vue';
+import { useCanvasStore } from '@/store/canvas-store';
+import { useClusters } from '@/store/clusters';
+import { useOptions } from '@/store/options-store';
 import { usePoints } from '@/store/point-store';
 import { TPoint } from '@/types/geom';
-import { useClusters } from '@/store/clusters';
-import { useCanvasStore } from '@/store/canvas-store';
+import Point from './Point.vue';
 
 const pointStore = usePoints();
 const clusters = useClusters();
 const canvasStore = useCanvasStore();
+const optsStore = useOptions();
 
 const onDragStart = (evt: DragEvent, pt: TPoint) => {
 	pointStore.select(pt.uid);
@@ -63,16 +65,35 @@ const addCluster = (uid: string) => {
 
 }
 
+const starStyle = computed(() => {
+
+	return {
+		'background-color': optsStore.opts.bgColor ?? '#ff0000',
+		blur: optsStore.opts.blur ? 'filter: blur(2px)' : undefined,
+	}
+
+});
+
+const starCls = computed(() => {
+
+	return [
+		`bg-[${optsStore.opts.bgColor ?? '#ff00ffff'}]`,
+	]
+
+});
+
 </script>
 <template>
-	<div class="absolute w-full h-full overflow-hidden bg-mana-100">
-		<div class="relative w-full h-full min-h-full min-w-full border border-black "
+	<div class="relative w-full h-full overflow-hidden"
+		 :style="{ backgroundColor: optsStore.opts.bgColor ?? 'blue' }">
+		<div class="relative w-full h-full min-h-full min-w-full border border-black"
 			 :style="canvasStore.canvasStyle()"
 			 @wheel.prevent="onWheel"
 			 @drop="onDrop" @dragover.prevent
 			 @click="clickPt">
 
 			<Point v-for="[_, p] in pointStore.points" :key="p.uid" :pt="p"
+				   :star-style="starStyle"
 				   @click.stop="pointStore.select(p.uid)"
 				   @click.shift="addCluster(p.uid)"
 				   @dragstart.stop="onDragStart($event, p)" @drag.stop="onDragPt($event, p)" />
