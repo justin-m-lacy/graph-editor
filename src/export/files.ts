@@ -17,7 +17,12 @@ export const makeLink = (json: string, saveName: string) => {
 
 }
 
-export const readJsonFile = <T extends any>(fileList: FileList) => {
+/**
+ * 
+ * @param fileList Load json file and parse as type.
+ * @returns 
+ */
+export const loadJsonFile = <T extends any>(fileList: FileList) => {
 
 	const file = fileList[0];
 	if (!file) return;

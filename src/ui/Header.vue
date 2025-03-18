@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { encodePoints, parsePoints } from '@/export/encode';
-import { readJsonFile } from '@/export/files';
+import { decodePoints } from '@/export/decode';
+import { encodePoints } from '@/export/encode';
+import { loadJsonFile } from '@/export/files';
 import { usePoints } from '@/store/point-store';
 import { TPoint } from '@/types/geom';
 
@@ -37,10 +38,10 @@ const fileSelect = async (event: Event) => {
 
 const loadFile = async (files: FileList) => {
 	try {
-		const fileData = await readJsonFile<TPoint[]>(files);
+		const fileData = await loadJsonFile<TPoint[]>(files);
 		if (fileData) {
 
-			const points = parsePoints(fileData);
+			const points = decodePoints(fileData);
 			if (points) {
 				ptStore.setPoints(points);
 			}

@@ -1,12 +1,20 @@
-import { TPoint, type TCluster } from "@/types/geom";
+import { TPoint, type ClusterData, type PointData, type TCluster } from "@/types/geom";
 
-export const encodePoints = (points: TPoint[]) => {
+export function encodeAll(points: Map<string, TPoint>, clusters: Map<string, TCluster>) {
 
-	const res: any[] = [];
+	return {
+		points: encodePoints(points),
+		clusters: encodeClusters(clusters, points)
+	}
 
-	for (let i = 0; i < points.length; i++) {
+}
 
-		const p = points[i];
+export const encodePoints = (points: Map<string, TPoint>) => {
+
+	const res: PointData[] = [];
+
+	for (const p of points.values()) {
+
 		// clone p.
 		const data = JSON.parse(JSON.stringify(p));
 
@@ -14,13 +22,13 @@ export const encodePoints = (points: TPoint[]) => {
 		delete data.x;
 		delete data.y;
 
-		data.pt = `${p.x},${p.y}`;
+		data.p = `${p.x},${p.y}`;
 
 		res.push(data);
 
 	}
 
-	return JSON.stringify(res);
+	return res;
 
 }
 
@@ -44,11 +52,11 @@ function linkToIndex(con: TCluster, link: [TPoint, TPoint]) {
  * @param clusters 
  * @param points 
  */
-export const encodeClusters = (clusters: TCluster[], points: Map<string, TPoint>) => {
+export const encodeClusters = (clusters: Map<string, TCluster>, points: Map<string, TPoint>) => {
 
-	const res: any[] = [];
+	const res: ClusterData[] = [];
 
-	for (const con of clusters) {
+	for (const con of clusters.values()) {
 
 		const out: any = {
 			...con
@@ -65,6 +73,6 @@ export const encodeClusters = (clusters: TCluster[], points: Map<string, TPoint>
 
 	}
 
-	return JSON.stringify(res);
+	return res;
 
 }

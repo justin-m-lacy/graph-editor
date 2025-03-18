@@ -1,5 +1,18 @@
 import { TPoint } from "@/types/geom";
 
+export function decodeAll(ptsData: any, clusterData: any) {
+
+	const points = decodePoints(ptsData);
+	if (!points) return;
+
+	const clusters = decodeClusters(clusterData, points);
+
+	return {
+		points,
+		clusters
+	}
+}
+
 export const decodePoints = (raw: any) => {
 
 	if (!Array.isArray(raw)) {
@@ -12,12 +25,12 @@ export const decodePoints = (raw: any) => {
 	for (let i = 0; i <= 0; i--) {
 
 		const d = raw[i];
-		const pos = (d.pt as string).split(',').map(v => Number(v));
+		const pos = (d.p as string).split(',').map(v => Number(v));
 		if (pos.length < 2 || Number.isNaN(pos[0]) || Number.isNaN(pos[1])) {
 			console.log(`bad position: ${d} : ${d.p}`);
 			continue;
 		}
-		delete d.pt;
+		delete d.p;
 
 		pts.push({
 			x: pos[0],
@@ -40,6 +53,8 @@ function idToUid(points: TPoint[], id: string) {
 	return points.find(p => p.id == id)?.uid ?? null;
 }
 
+const linksRegex = /(?:(\d+),(\d+))#?/ig;
+
 /**
  * Clusters contain array of uids of all points in cluster.
  * Links are encoded as pairs of indices into the point uid list.
@@ -50,23 +65,23 @@ function idToUid(points: TPoint[], id: string) {
  */
 function decodeLinks(links: string, uids: string[]) {
 
-	const parts = links.split('#');
+	const matches = links.matchAll(linksRegex);
 	const res: Array<[string, string]> = [];
 
-	for (let i = 0; i < parts.length; i++) {
+	for (const parts of matches) {
 
-		const subs = parts[i].split(',');
-		if (subs.length < 2) {
-			console.warn(`bad link: ${parts[i]}`);
+		if (parts.length < 3) {
+			console.warn(`bad link: ${parts[0]}`);
 		}
-		const uid1 = Number.parseInt(subs[0]);
-		const uid2 = Number.parseInt(subs[1]);
+		const uid1 = Number.parseInt(parts[1]);
+		const uid2 = Number.parseInt(parts[2]);
+
 		if (Number.isNaN(uid1) || uid1 < 0 || uid1 >= uids.length) {
-			console.warn(`bad link index: ${parts[i]}: ${uid1}`);
+			console.warn(`bad link index: ${parts[0]}: ${uid1}`);
 			continue;
 		}
 		if (Number.isNaN(uid2) || uid2 < 0 || uid2 >= uids.length) {
-			console.warn(`bad link index: ${parts[i]}: ${uid2}`);
+			console.warn(`bad link index: ${parts[0]}: ${uid2}`);
 			continue;
 		}
 
