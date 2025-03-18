@@ -30,7 +30,7 @@ export const usePoints = defineStore('points', () => {
 
 		pt.x = obj.x ?? 100;
 		pt.y = obj.y ?? 100;
-		pt.r ??= 2;
+		pt.r ??= 4;
 
 		points.value.set(pt.id, pt as TPoint);
 		select.select(pt as TPoint);
@@ -41,9 +41,10 @@ export const usePoints = defineStore('points', () => {
 		return points.value.get(uid);
 	}
 
-	const remove = (uid: string) => {
+	const deletePt = (uid: string) => {
 
 		if (points.value.delete(uid)) {
+			triggerRef(points);
 			events.emit('delete-pt', uid);
 		}
 
@@ -54,7 +55,7 @@ export const usePoints = defineStore('points', () => {
 		create,
 		get,
 		get map() { return points; },
-		remove,
+		deletePt,
 		select,
 		setPoints
 

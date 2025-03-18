@@ -17,8 +17,7 @@ const drawPoints = (ctx: CanvasRenderingContext2D) => {
 	for (const p of points.map.values()) {
 
 		ctx.fillStyle = p.color ?? base;
-		ctx.beginPath();
-		ctx.arc(p.x, p.y, p.r ?? 2, 0, pi2);
+		ctx.arc(p.x, p.y, p.r ?? 5, 0, pi2);
 		ctx.fill();
 
 	}
@@ -53,12 +52,17 @@ const drawClusters = (ctx: CanvasRenderingContext2D) => {
 
 const update = () => {
 
-	const ctx = elRef.value?.getContext('2d');
+	const el = elRef.value;
+	if (!el) return;
+	const ctx = el.getContext('2d');
 	if (!ctx) return;
 
-	ctx.fill()
+	console.log(`size: ${el.width},${el.height}`);
+	ctx.clearRect(0, 0, el.width, el.height);
+
 	drawPoints(ctx);
 	drawClusters(ctx);
+
 }
 
 watchEffect(update);

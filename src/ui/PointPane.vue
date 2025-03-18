@@ -20,8 +20,8 @@ const linkAll = () => {
 	clusters.link(Array.from(select.map.values()));
 }
 
-const removePt = (uid: string) => {
-	pointStore.remove(uid)
+const deletePt = (uid: string) => {
+	pointStore.deletePt(uid)
 }
 
 watch(() => select.map, (sel) => {
@@ -51,12 +51,14 @@ watch(() => select.map, (sel) => {
 		<div class="flex items-center font-semibold text-sm">{{ round(topPt.x) }}, {{ round(topPt.y) }}</div>
 		<input type="color" class="p-0 m-[2px] w-full" v-model="topPt.color">
 		<input type="number" v-model="topPt.r">
-		<button type="button" class="bg-rose-900/50" @click="removePt(topPt.uid)">🗑</button>
+
+		<button type="button" class="bg-rose-900/50 border border-black" @click="deletePt(topPt.uid)">🗑</button>
+
 		<div v-if="select.map.size > 1">( {{ select.map.size - 1 }} more...)</div>
-		<button type="button" class="bg-rose-900/50"
+		<button type="button" class="bg-rose-900/50 border border-black"
 				title="Link in current cluster"
 				@click="linkAll">Link All</button>
-		<button type="button" class="bg-rose-900/50"
+		<button type="button" class="bg-rose-900/50 border border-black"
 				title="Unlink points in cluster"
 				@click="unlink">Unlink</button>
 	</div>

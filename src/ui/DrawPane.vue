@@ -5,7 +5,7 @@ import { useOptions } from '@/store/options-store';
 import { usePoints } from '@/store/point-store';
 import { useSelect } from '@/store/select-store';
 import { TPoint } from '@/types/geom';
-import CanvasPane from './CanvasPane.vue';
+import { useEventListener } from '@vueuse/core';
 import Point from './Point.vue';
 
 const pointStore = usePoints();
@@ -14,12 +14,10 @@ const canvasStore = useCanvasStore();
 const optsStore = useOptions();
 const selectStore = useSelect();
 
-const onDragStart = (evt: DragEvent, pt: TPoint) => {
-	selectStore.select(pt);
-	evt.dataTransfer?.setData('text/plain', pt.uid);
-}
+const dragTarg = shallowRef<TPoint | null>(null);
 
 const onDragPt = (evt: DragEvent, pt: TPoint) => {
+	console.log(`on drag pt called...`)
 	canvasStore.toLocal(evt, pt);
 }
 
@@ -66,33 +64,41 @@ const addCluster = (uid: string) => {
 
 }
 
-/*const starStyle = computed(() => {
+const mouseMove = (evt: MouseEvent) => {
 
-	return {
-		'background-color': optsStore.opts.bgColor ?? '#ff0000',
-		blur: optsStore.opts.blur ? 'filter: blur(2px)' : undefined,
+	if (dragTarg.value) {
+		canvasStore.toLocal(evt, dragTarg.value, evt.target as HTMLElement);
 	}
+}
 
-});*/
+const startDrag = (p: TPoint) => {
+	selectStore.select(p);
+	dragTarg.value = p;
+}
+const stopDrag = () => {
+	dragTarg.value = null;
+}
+
+useEventListener('mouseup', stopDrag);
 
 </script>
 <template>
-	<div class="relative w-full h-full overflow-hidden">
+	<div class="relative w-full h-full overflow-hidden border border-black"
+		 :style="{ backgroundColor: optsStore.opts.bgColor ?? 'blue' }">
 
-		<div class="relative w-full h-full min-h-full min-w-full border border-black"
+		<div class="relative w-full h-full min-h-full min-w-full "
 			 :style="canvasStore.canvasStyle()"
 			 @wheel.prevent="onWheel"
 			 @drop="onDrop" @dragover.prevent
+			 @mousemove="mouseMove"
 			 @click="clickPt">
 
-			<CanvasPane class="absolute w-full h-full min-w-full"
-						:style="{ backgroundColor: optsStore.opts.bgColor ?? 'blue' }" />
-
-			<Point v-for="[_, p] in pointStore.map" :key="p.uid" :pt="p"
+			<Point v-for="[_, p] in pointStore.map" :key="p.uid"
+				   :pt="p" :color="optsStore.ptColor!"
 				   :selected="selectStore.has(p.uid)"
-				   @click.stop="selectStore.select(p)"
-				   @click.shift="selectStore.add(p)"
-				   @dragstart.stop="onDragStart($event, p)" @drag.stop="onDragPt($event, p)" />
+				   @mousedown="startDrag(p)"
+				   @click.stop
+				   @mousedown.shift="selectStore.add(p)" />
 
 		</div>
 	</div>
