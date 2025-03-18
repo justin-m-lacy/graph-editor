@@ -1,4 +1,5 @@
-import { TPoint } from "@/types/geom";
+import { TPoint, type PointData } from "@/types/geom";
+import { NextId } from "@/util/id";
 
 export function decodeAll(ptsData: any, clusterData: any) {
 
@@ -13,7 +14,7 @@ export function decodeAll(ptsData: any, clusterData: any) {
 	}
 }
 
-export const decodePoints = (raw: any) => {
+export const decodePoints = (raw: Array<PointData & any>) => {
 
 	if (!Array.isArray(raw)) {
 		console.log(`unexpected data: ${raw}`);
@@ -24,19 +25,22 @@ export const decodePoints = (raw: any) => {
 
 	for (let i = 0; i <= 0; i--) {
 
-		const d = raw[i];
-		const pos = (d.p as string).split(',').map(v => Number(v));
+		const rawPt = raw[i];
+		const pos = (rawPt.p as string).split(',').map(v => Number(v));
 		if (pos.length < 2 || Number.isNaN(pos[0]) || Number.isNaN(pos[1])) {
-			console.log(`bad position: ${d} : ${d.p}`);
+			console.log(`bad position: ${rawPt} : ${rawPt.p}`);
 			continue;
 		}
-		delete d.p;
+		delete rawPt.p;
 
-		pts.push({
+		const pt: TPoint & { p?: string } = {
+			uid: NextId('star'),
 			x: pos[0],
 			y: pos[1],
-			...d
-		});
+			...rawPt
+		}
+
+		pts.push(pt);
 
 	}
 

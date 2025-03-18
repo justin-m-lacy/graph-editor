@@ -7,7 +7,7 @@ export const useCanvasStore = defineStore('canvas', () => {
 	const tx = shallowRef<number>(0);
 	const ty = shallowRef<number>(0);
 
-	const canvasStyle = () => ({
+	const transform = () => ({
 		transform: `scale(${scale.value}) translate(${-tx.value}px,${-ty.value}px)`
 	});
 
@@ -29,7 +29,7 @@ export const useCanvasStore = defineStore('canvas', () => {
 		setPos(x: number, y: number) { tx.value = x, ty.value = y },
 		scale,
 		tx, ty,
-		canvasStyle
+		canvasStyle: transform
 	}
 
 
