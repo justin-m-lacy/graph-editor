@@ -14,30 +14,7 @@ const canvasStore = useCanvasStore();
 const optsStore = useOptions();
 const selectStore = useSelect();
 
-const dragTarg = shallowRef<TPoint | null>(null);
-
-const onDragPt = (evt: DragEvent, pt: TPoint) => {
-	console.log(`on drag pt called...`)
-	canvasStore.toLocal(evt, pt);
-}
-
-const onDrop = (evt: DragEvent) => {
-
-	evt.preventDefault();
-
-	const ptUid = evt.dataTransfer?.getData('text/plain');
-	if (ptUid) {
-
-		console.log(`drop: ${evt.pageX},${evt.pageY}`);
-
-		const pt = pointStore.get(ptUid);
-		if (pt) {
-			console.log(`pt: ${pt.x},${pt.y}`);
-		}
-
-	}
-
-}
+const dragTarg = ref<TPoint | null>(null);
 
 const onWheel = (e: WheelEvent) => {
 
@@ -86,18 +63,17 @@ useEventListener('mouseup', stopDrag);
 	<div class="relative w-full h-full overflow-hidden border border-black"
 		 :style="{ backgroundColor: optsStore.opts.bgColor ?? 'blue' }">
 
-		<div class="relative w-full h-full min-h-full min-w-full "
+		<div class="relative w-full h-full min-h-full min-w-full"
 			 :style="canvasStore.canvasStyle()"
 			 @wheel.prevent="onWheel"
-			 @drop="onDrop" @dragover.prevent
-			 @mousemove="mouseMove"
+			 @mousemove.self="mouseMove"
 			 @click="clickPt">
 
 			<Point v-for="[_, p] in pointStore.map" :key="p.uid"
 				   :pt="p" :color="optsStore.ptColor!"
 				   :selected="selectStore.has(p.uid)"
-				   @mousedown="startDrag(p)"
 				   @click.stop
+				   @mousedown="startDrag(p)"
 				   @mousedown.shift="selectStore.add(p)" />
 
 		</div>
