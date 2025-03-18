@@ -53,6 +53,13 @@ export const useSelect = defineStore('selection', () => {
 		triggerRef(map);
 	}
 
+	const first = () => {
+		for (const e of map.value) {
+			return e[1];
+		}
+		return null;
+	}
+
 	events.addListener('delete-pt', (uid: string) => {
 		remove(uid);
 	});
@@ -60,6 +67,7 @@ export const useSelect = defineStore('selection', () => {
 
 	return {
 
+		first,
 		map,
 		add,
 		remove,
