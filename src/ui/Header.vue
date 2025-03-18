@@ -8,7 +8,7 @@ const ptStore = usePoints();
 
 const expPoints = () => {
 
-	const json = encodePoints(Array.from(ptStore.points.values()));
+	const json = encodePoints(Array.from(ptStore.map.values()));
 
 }
 

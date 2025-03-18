@@ -1,30 +1,32 @@
 import { useLocalStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
 
-type TOPts = {
+type TOpts = {
 	bgColor?: string,
 	ptColor?: string,
+	linesColor?: string,
 	blur?: boolean | number
 }
 
-const makeOpt = <T extends any>(ref: Ref<any>, s: string) => {
+const makeOpt = <K extends keyof TOpts>(ref: Ref<TOpts>, s: K) => {
 
-	return computed<T>({
-		get() { return ref.value[s] as T; },
-		set(v: T) { ref.value[s] = v; }
+	return computed<TOpts[K] | undefined>({
+		get() { return ref.value[s]; },
+		set(v: TOpts[K] | undefined) { ref.value[s] = v; }
 	});
 
 }
 
 export const useOptions = defineStore('options', () => {
 
-	const opts = useLocalStorage<TOPts>('options', {
+	const opts = useLocalStorage<TOpts>('options', {
 
 	},
 		{ deep: true, listenToStorageChanges: false, mergeDefaults: true });
 
 	const bgColor = makeOpt(opts, 'bgColor');
 	const ptColor = makeOpt(opts, 'ptColor');
+	const linesColor = makeOpt(opts, 'linesColor');
 
 	return {
 
@@ -32,12 +34,13 @@ export const useOptions = defineStore('options', () => {
 
 		bgColor,
 		ptColor,
+		linesColor,
 
-		setVal<K extends keyof TOPts>(s: K, v: TOPts[K]) {
+		setVal<K extends keyof TOpts>(s: K, v: TOpts[K]) {
 			opts.value[s] = v;
 		},
-		getVal<K extends keyof TOPts>(s: K) {
-			return opts.value[s] as TOPts[K] | undefined
+		getVal<K extends keyof TOpts>(s: K) {
+			return opts.value[s] as TOpts[K] | undefined
 		}
 	}
 

@@ -3,6 +3,7 @@ import { useCanvasStore } from '@/store/canvas-store';
 import { useClusters } from '@/store/clusters';
 import { useOptions } from '@/store/options-store';
 import { usePoints } from '@/store/point-store';
+import { useSelect } from '@/store/select-store';
 import { TPoint } from '@/types/geom';
 import Point from './Point.vue';
 
@@ -10,10 +11,11 @@ const pointStore = usePoints();
 const clusters = useClusters();
 const canvasStore = useCanvasStore();
 const optsStore = useOptions();
+const selectStore = useSelect();
 
 const onDragStart = (evt: DragEvent, pt: TPoint) => {
-	pointStore.select(pt.id);
-	evt.dataTransfer?.setData('text/plain', pt.id);
+	selectStore.select(pt);
+	evt.dataTransfer?.setData('text/plain', pt.uid);
 }
 
 const onDragPt = (evt: DragEvent, pt: TPoint) => {
@@ -24,12 +26,12 @@ const onDrop = (evt: DragEvent) => {
 
 	evt.preventDefault();
 
-	const ptId = evt.dataTransfer?.getData('text/plain');
-	if (ptId) {
+	const ptUid = evt.dataTransfer?.getData('text/plain');
+	if (ptUid) {
 
 		console.log(`drop: ${evt.pageX},${evt.pageY}`);
 
-		const pt = pointStore.get(ptId);
+		const pt = pointStore.get(ptUid);
 		if (pt) {
 			console.log(`pt: ${pt.x},${pt.y}`);
 		}
@@ -49,19 +51,17 @@ const onWheel = (e: WheelEvent) => {
 
 const clickPt = (e: MouseEvent) => {
 
-	const pt = canvasStore.toLocal(e, { x: 0, y: 0 }, e.target as HTMLElement);
-
-
+	const coord = canvasStore.toLocal(e, { x: 0, y: 0 }, e.target as HTMLElement);
 	pointStore.create(
-		pt
+		coord
 	);
 
 }
 
-const addCluster = (id: string) => {
+const addCluster = (uid: string) => {
 
 	const con = clusters.selected ?? clusters.create();
-	clusters.addPt(con, id);
+	clusters.addPt(con, uid);
 
 }
 
@@ -71,14 +71,6 @@ const starStyle = computed(() => {
 		'background-color': optsStore.opts.bgColor ?? '#ff0000',
 		blur: optsStore.opts.blur ? 'filter: blur(2px)' : undefined,
 	}
-
-});
-
-const starCls = computed(() => {
-
-	return [
-		`bg-[${optsStore.opts.bgColor ?? '#ff00ffff'}]`,
-	]
 
 });
 
@@ -92,10 +84,10 @@ const starCls = computed(() => {
 			 @drop="onDrop" @dragover.prevent
 			 @click="clickPt">
 
-			<Point v-for="[_, p] in pointStore.points" :key="p.id" :pt="p"
+			<Point v-for="[_, p] in pointStore.map" :key="p.uid" :pt="p"
 				   :star-style="starStyle"
-				   @click.stop="pointStore.select(p.id)"
-				   @click.shift="addCluster(p.id)"
+				   @click.stop="selectStore.select(p)"
+				   @click.shift="selectStore.add(p)"
 				   @dragstart.stop="onDragStart($event, p)" @drag.stop="onDragPt($event, p)" />
 
 		</div>

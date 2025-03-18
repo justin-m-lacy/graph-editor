@@ -4,7 +4,7 @@ import { positionElm } from "@/util/dom";
 import { round } from '../util/dom';
 
 const props = defineProps<{
-	pt: TPoint
+	pts: TPoint[]
 }>();
 
 const emit = defineEmits<{
@@ -13,10 +13,17 @@ const emit = defineEmits<{
 
 const elRef = shallowRef<HTMLElement>();
 
-watch(() => props.pt, (sel) => {
+const first = shallowRef<TPoint | null>(null);
 
-	if (sel) {
-		nextTick(() => positionElm(elRef.value, sel.x, sel.y));
+watch(() => props.pts, (sel) => {
+
+	if (sel && sel.length > 0) {
+
+		const pt = first.value = sel[0];
+		nextTick(() => positionElm(elRef.value, pt.x, pt.y));
+
+	} else {
+		first.value = null;
 	}
 
 }, { immediate: true, deep: true });
@@ -26,13 +33,14 @@ watch(() => props.pt, (sel) => {
 	<div ref="elRef" class="absolute flex flex-col flex-wrap border border-gray-800
 	border-t-8 border-t-amber-900 rounded-lg pb-1 p-1 shadow-lg
 	 bg-earth-200 min-w-40 text-amber-950
-	 " @click.stop>
+	 " @click.stop v-if="first">
 
-		<input v-model="pt.id" placeholder="id" @click.stop
+		<input v-model="first.id" placeholder="id" @click.stop
 			   class="bg-amber-700/40 px-1 text-amber-950 placeholder-amber-950/70">
-		<div class="flex items-center font-semibold text-sm">{{ round(pt.x) }}, {{ round(pt.y) }}</div>
-		<input type="color" class="p-0 m-[2px] w-full" v-model="pt.color">
-		<input type="number" v-model="pt.r">
-		<button type="button" class="bg-rose-900/50" @click="emit('remove', pt.id)">🗑</button>
+		<div class="flex items-center font-semibold text-sm">{{ round(first.x) }}, {{ round(first.y) }}</div>
+		<input type="color" class="p-0 m-[2px] w-full" v-model="first.color">
+		<input type="number" v-model="first.r">
+		<button type="button" class="bg-rose-900/50" @click="emit('remove', first.id)">🗑</button>
+		<div v-if="pts.length > 1">( {{ pts.length - 1 }} more...)</div>
 	</div>
 </template>

@@ -1,4 +1,5 @@
 import { events } from "@/store/events";
+import { useSelect } from "@/store/select-store";
 import { TPoint } from "@/types/geom";
 import { NextId } from "@/util/id";
 import { defineStore } from "pinia";
@@ -6,70 +7,54 @@ import { defineStore } from "pinia";
 export const usePoints = defineStore('points', () => {
 
 	const points = ref<Map<string, TPoint>>(new Map());
-	const selUid = ref<string | null>(null);
 
-	const selected = computed(() => {
-		return selUid.value ? points.value.get(selUid.value) ?? null : null;
-	});
+	const select = useSelect();
 
 	const setPoints = (pts: TPoint[]) => {
 
 		points.value.clear();
 		for (const pt of pts) {
-			points.value.set(pt.id, pt);
+			points.value.set(pt.uid, pt);
 		}
-		deselect();
+
 	}
 
-	const deselect = () => selUid.value = null;
+	const create = (obj: Partial<TPoint>) => {
 
-	const create = (pt: Partial<TPoint>) => {
-
-		const obj = {
-			...pt
+		const pt = {
+			...obj
 		};
-		obj.id = `star${NextId('star')}`
-		obj.x = pt.x ?? 100;
-		obj.y = pt.y ?? 100;
-		obj.r ??= 2;
 
-		points.value.set(obj.id, obj as TPoint);
-		selUid.value = obj.id;
+		const uid = pt.uid = NextId('star');
+		pt.id = `star${uid}`
 
-	}
+		pt.x = obj.x ?? 100;
+		pt.y = obj.y ?? 100;
+		pt.r ??= 2;
 
-	const get = (id: string) => {
-		return points.value.get(id);
-	}
-
-	const remove = (id?: string | null) => {
-
-		id ??= selUid.value;
-		if (!id) return;
-
-		const cur = points.value.get(id);
-		if (!cur) return;
-
-		points.value.delete(id);
-
-		if (selUid.value == id) deselect();
-
-		events.emit('delete-star', id);
+		points.value.set(pt.id, pt as TPoint);
+		select.select(pt as TPoint);
 
 	}
 
-	const select = (id: string | null) => {
-		selUid.value = id;
+	const get = (uid: string) => {
+		return points.value.get(uid);
+	}
+
+	const remove = (uid: string) => {
+
+		if (points.value.delete(uid)) {
+			events.emit('delete-pt', uid);
+		}
+
 	}
 
 	return {
 
 		create,
-		deselect,
 		get,
-		get points() { return points; },
+		get map() { return points; },
 		remove,
-		selected,
 		select,
 		setPoints
 
