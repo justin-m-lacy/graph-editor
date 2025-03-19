@@ -1,4 +1,3 @@
-import { useClusters } from "@/store/clusters";
 import { events } from "@/store/events";
 import { defineStore } from "pinia";
 import { TPoint } from '../types/geom';
@@ -7,8 +6,6 @@ import { TPoint } from '../types/geom';
  * select groups of stars to define links.
  */
 export const useSelect = defineStore('selection', () => {
-
-	const clusters = useClusters();
 
 	/// use list to control select-order.
 	const list = ref<TPoint[]>([]);
@@ -31,7 +28,7 @@ export const useSelect = defineStore('selection', () => {
 	const add = (p: TPoint) => {
 
 		if (!list.value.some(v => v.uid == p.uid)) {
-			list.value.push(p);
+			list.value.unshift(p);
 		}
 
 	}
@@ -56,7 +53,7 @@ export const useSelect = defineStore('selection', () => {
 	}
 
 	const top = () => {
-		return list.value.length > 0 ? list.value[list.value.length - 1] : null;
+		return list.value[0] ?? null;
 	}
 
 	events.addListener('delete-pt', (uid: string) => {

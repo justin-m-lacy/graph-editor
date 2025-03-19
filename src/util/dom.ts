@@ -9,14 +9,8 @@ const PadY = 12;
  * @returns 
  */
 export const toLocalPos = <T extends { x?: number, y?: number }>(
-	evt: MouseEvent | DragEvent, pt: T,
-	{
-		parent,
-		scale = 1
-	}: {
-		parent?: HTMLElement,
-		scale?: number,
-	} = {}) => {
+	evt: MouseEvent | DragEvent, parent: HTMLElement, pt: T,
+	scale: number = 1) => {
 
 	parent ??= (evt.target as HTMLElement).parentElement ?? document.body;
 	const parentRect = parent.getBoundingClientRect();

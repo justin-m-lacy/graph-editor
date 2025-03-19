@@ -15,7 +15,10 @@ const canvasStore = useCanvasStore();
 const optsStore = useOptions();
 const selectStore = useSelect();
 
-const dragTarg = ref<TPoint | null>(null);
+let dragging = false;
+let groupDrag = false;
+/// previous point in drag operation.
+let prevPt = { x: 0, y: 0 };
 
 const container = ref<HTMLElement>();
 
@@ -32,7 +35,7 @@ const onWheel = (e: WheelEvent) => {
 
 const makePt = (e: MouseEvent) => {
 
-	const coord = canvasStore.toLocal(e, { x: 0, y: 0 }, elRef.value);
+	const coord = canvasStore.toLocal(e, elRef.value!, { x: 0, y: 0 });
 
 	const p = pointStore.create(
 		coord
@@ -55,24 +58,53 @@ const addCluster = (uid: string) => {
 
 const mouseMove = (evt: MouseEvent) => {
 
-	if (dragTarg.value) {
-		canvasStore.toLocal(evt, dragTarg.value, evt.target as HTMLElement);
+	if (!dragging) return;
+
+	const drags = selectStore.list;
+	if (drags.length <= 0) return;
+
+	if (groupDrag) {
+
+		const nextPt = { x: 0, y: 0 };
+		canvasStore.toLocal(evt, elRef.value!, nextPt,);
+
+		const dx = nextPt.x - prevPt.x;
+		const dy = nextPt.y - prevPt.y;
+		prevPt.x = nextPt.x;
+		prevPt.y = nextPt.y;
+
+		console.log(`group drag: ${dx},${dy}`)
+		for (let i = 0; i < drags.length; i++) {
+			drags[i].x += dx;
+			drags[i].y += dy;
+		}
+
+	} else {
+
+		canvasStore.toLocal(evt, elRef.value!, drags[0]);
 	}
+
+
 }
 
 const clickPt = (evt: MouseEvent, p: TPoint) => {
 
 	if (evt.shiftKey) {
+
 		selectStore.add(p);
+		groupDrag = true;
+
 	} else {
 		selectStore.select(p);
-		dragTarg.value = p;
+		groupDrag = false;
 	}
+	dragging = true;
+	canvasStore.toLocal(evt, elRef.value!, prevPt,);
 
 }
 
 const stopDrag = () => {
-	dragTarg.value = null;
+	dragging = false;
 }
 
 onMounted(() => {
@@ -91,12 +123,12 @@ useEventListener('mouseup', stopDrag);
 <template>
 	<div ref="container" class="relative w-full h-full overflow-hidden border border-black"
 		 :style="{ backgroundColor: optsStore.opts.bgColor ?? 'blue' }"
+		 @mousemove="mouseMove"
 		 @click="makePt">
 
 		<div ref="elRef" class="relative w-full h-full"
 			 :style="canvasStore.canvasStyle()"
-			 @wheel.prevent="onWheel"
-			 @mousemove.self="mouseMove">
+			 @wheel.prevent="onWheel">
 
 			<DrawClusters />
 			<Point v-for="[_, p] in pointStore.map" :key="p.uid"

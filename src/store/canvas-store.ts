@@ -12,14 +12,9 @@ export const useCanvasStore = defineStore('canvas', () => {
 	});
 
 	const toLocal = <T extends { x?: number, y?: number }>(
-		evt: MouseEvent | DragEvent, pt: T, parent?: HTMLElement) => {
+		evt: MouseEvent | DragEvent, parent: HTMLElement, pt: T) => {
 
-		return toLocalPos(evt, pt, {
-			parent: parent,
-			scale: scale.value,
-			tx: tx.value,
-			ty: ty.value
-		})
+		return toLocalPos(evt, parent, pt, scale.value)
 
 	}
 

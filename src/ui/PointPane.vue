@@ -14,10 +14,10 @@ const elRef = shallowRef<HTMLElement>();
 const topPt = shallowRef<TPoint | null>(null);
 
 const unlink = () => {
-	clusters.unlink(Array.from(select.list));
+	clusters.unlink(select.list);
 }
 const linkAll = () => {
-	clusters.link(Array.from(select.list));
+	clusters.link(select.list);
 }
 
 const deletePt = (uid: string) => {
