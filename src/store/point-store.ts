@@ -1,5 +1,4 @@
 import { events } from "@/store/events";
-import { useSelect } from "@/store/select-store";
 import { TPoint } from "@/types/geom";
 import { NextId } from "@/util/id";
 import { defineStore } from "pinia";
@@ -7,8 +6,6 @@ import { defineStore } from "pinia";
 export const usePoints = defineStore('points', () => {
 
 	const points = ref<Map<string, TPoint>>(new Map());
-
-	const select = useSelect();
 
 	const setPoints = (pts: TPoint[]) => {
 
@@ -33,7 +30,8 @@ export const usePoints = defineStore('points', () => {
 		pt.r ??= 4;
 
 		points.value.set(pt.id, pt as TPoint);
-		select.select(pt as TPoint);
+
+		return pt as TPoint;
 
 	}
 
@@ -56,7 +54,6 @@ export const usePoints = defineStore('points', () => {
 		get,
 		get map() { return points; },
 		deletePt,
-		select,
 		setPoints
 
 	}

@@ -8,7 +8,7 @@ export const useCanvasStore = defineStore('canvas', () => {
 	const ty = shallowRef<number>(0);
 
 	const transform = () => ({
-		transform: `scale(${scale.value}) translate(${-tx.value}px,${-ty.value}px)`
+		transform: `scale(${scale.value}) translate(${tx.value}px,${ty.value}px)`
 	});
 
 	const toLocal = <T extends { x?: number, y?: number }>(

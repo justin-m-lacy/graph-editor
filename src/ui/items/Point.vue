@@ -6,10 +6,6 @@ const props = defineProps<{
 	selected?: boolean
 }>();
 
-watch(() => props.pt, (newPt) => {
-	console.log(`pt changed`);
-});
-
 const style = computed(() => {
 
 	return {
@@ -21,9 +17,11 @@ const style = computed(() => {
 
 </script>
 <template>
-	<svg class="absolute" :width="2 * (pt.r ?? 4)" :height="2 * (pt.r ?? 4)"
+	<svg class="absolute box-content rounded-full -translate-x-1/2 -translate-y-1/2 border-2 border-transparent"
+		 :width="2 * (pt.r ?? 4)"
+		 :height="2 * (pt.r ?? 4)"
 		 :style="style"
-		 :class="selected ? 'box-content rounded-full -translate-x-1/2 -translate-y-1/2  border-2 border-transparent outline-2 outline-black outline-dashed' : undefined">
+		 :class="selected ? 'outline-2 outline-black outline-dashed' : undefined">
 		<circle cx="50%" cy="50%" r="40%" :fill="'black'" />
 	</svg>
 

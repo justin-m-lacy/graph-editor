@@ -6,7 +6,8 @@ import { usePoints } from '@/store/point-store';
 import { useSelect } from '@/store/select-store';
 import { TPoint } from '@/types/geom';
 import { useEventListener } from '@vueuse/core';
-import Point from './Point.vue';
+import DrawClusters from './items/DrawClusters.vue';
+import Point from './items/Point.vue';
 
 const pointStore = usePoints();
 const clusters = useClusters();
@@ -15,6 +16,10 @@ const optsStore = useOptions();
 const selectStore = useSelect();
 
 const dragTarg = ref<TPoint | null>(null);
+
+const container = ref<HTMLElement>();
+
+const elRef = ref<HTMLElement>();
 
 const onWheel = (e: WheelEvent) => {
 
@@ -25,12 +30,19 @@ const onWheel = (e: WheelEvent) => {
 
 }
 
-const clickPt = (e: MouseEvent) => {
+const makePt = (e: MouseEvent) => {
 
-	const coord = canvasStore.toLocal(e, { x: 0, y: 0 }, e.target as HTMLElement);
-	pointStore.create(
+	const coord = canvasStore.toLocal(e, { x: 0, y: 0 }, elRef.value);
+
+	const p = pointStore.create(
 		coord
 	);
+
+	if (e.shiftKey) {
+		selectStore.add(p);
+	} else {
+		selectStore.select(p);
+	}
 
 }
 
@@ -48,33 +60,50 @@ const mouseMove = (evt: MouseEvent) => {
 	}
 }
 
-const startDrag = (p: TPoint) => {
-	selectStore.select(p);
-	dragTarg.value = p;
+const clickPt = (evt: MouseEvent, p: TPoint) => {
+
+	if (evt.shiftKey) {
+		selectStore.add(p);
+	} else {
+		selectStore.select(p);
+		dragTarg.value = p;
+	}
+
 }
+
 const stopDrag = () => {
 	dragTarg.value = null;
 }
+
+onMounted(() => {
+
+	const w = container.value?.clientWidth ?? 0;
+	const h = container.value?.clientHeight ?? 0;
+
+	// center. initial position
+	canvasStore.setPos(w / 2, h / 2);
+
+});
 
 useEventListener('mouseup', stopDrag);
 
 </script>
 <template>
-	<div class="relative w-full h-full overflow-hidden border border-black"
-		 :style="{ backgroundColor: optsStore.opts.bgColor ?? 'blue' }">
+	<div ref="container" class="relative w-full h-full overflow-hidden border border-black"
+		 :style="{ backgroundColor: optsStore.opts.bgColor ?? 'blue' }"
+		 @click="makePt">
 
-		<div class="relative w-full h-full min-h-full min-w-full"
+		<div ref="elRef" class="relative w-full h-full"
 			 :style="canvasStore.canvasStyle()"
 			 @wheel.prevent="onWheel"
-			 @mousemove.self="mouseMove"
-			 @click="clickPt">
+			 @mousemove.self="mouseMove">
 
+			<DrawClusters />
 			<Point v-for="[_, p] in pointStore.map" :key="p.uid"
 				   :pt="p" :color="optsStore.ptColor!"
 				   :selected="selectStore.has(p.uid)"
 				   @click.stop
-				   @mousedown="startDrag(p)"
-				   @mousedown.shift="selectStore.add(p)" />
+				   @mousedown="clickPt($event, p)" />
 
 		</div>
 	</div>
