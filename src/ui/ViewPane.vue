@@ -73,7 +73,6 @@ const mouseMove = (evt: MouseEvent) => {
 		prevPt.x = nextPt.x;
 		prevPt.y = nextPt.y;
 
-		console.log(`group drag: ${dx},${dy}`)
 		for (let i = 0; i < drags.length; i++) {
 			drags[i].x += dx;
 			drags[i].y += dy;
