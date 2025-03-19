@@ -14,21 +14,21 @@ const elRef = shallowRef<HTMLElement>();
 const topPt = shallowRef<TPoint | null>(null);
 
 const unlink = () => {
-	clusters.unlink(Array.from(select.map.values()));
+	clusters.unlink(Array.from(select.list));
 }
 const linkAll = () => {
-	clusters.link(Array.from(select.map.values()));
+	clusters.link(Array.from(select.list));
 }
 
 const deletePt = (uid: string) => {
 	pointStore.deletePt(uid)
 }
 
-watch(() => select.map, (sel) => {
+watch(() => select.list, (sel) => {
 
-	if (sel && sel.size > 0) {
+	if (sel && sel.length > 0) {
 
-		const pt = topPt.value = select.first();
+		const pt = topPt.value = select.top();
 		nextTick(() => {
 			if (pt) positionElm(elRef.value, pt.x, pt.y)
 		});
@@ -54,7 +54,7 @@ watch(() => select.map, (sel) => {
 
 		<button type="button" class="bg-rose-900/50 border border-black" @click="deletePt(topPt.uid)">🗑</button>
 
-		<div v-if="select.map.size > 1">( {{ select.map.size - 1 }} more...)</div>
+		<div v-if="select.size > 1">( {{ select.size - 1 }} more...)</div>
 		<button type="button" class="bg-rose-900/50 border border-black"
 				title="Link in current cluster"
 				@click="linkAll">Link All</button>

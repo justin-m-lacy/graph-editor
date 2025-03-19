@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import ClustersPane from './ClustersPane.vue';
-import DrawPane from './DrawPane.vue';
 import Header from './Header.vue';
 import OptionsPane from './OptionsPane.vue';
 import PointPane from './PointPane.vue';
+import ViewPane from './ViewPane.vue';
 
 </script>
 
@@ -14,7 +14,7 @@ import PointPane from './PointPane.vue';
     <div class="flex h-full w-full">
       <ClustersPane class="z-10" />
       <PointPane class="absolute z-100" />
-      <DrawPane />
+      <ViewPane />
       <OptionsPane class="self-end z-10" />
     </div>
   </div>

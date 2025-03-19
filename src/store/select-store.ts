@@ -10,7 +10,8 @@ export const useSelect = defineStore('selection', () => {
 
 	const clusters = useClusters();
 
-	const map = shallowRef<Map<string, TPoint>>(new Map());
+	/// use list to control select-order.
+	const list = ref<TPoint[]>([]);
 
 	/**
 	 * Set selection to only point.
@@ -18,9 +19,9 @@ export const useSelect = defineStore('selection', () => {
 	 */
 	const select = (p: TPoint) => {
 
-		map.value.clear();
-		map.value.set(p.uid, p);
-		triggerRef(map);
+		list.value.length = 0;
+		list.value.push(p);
+
 	}
 
 	/**
@@ -29,35 +30,33 @@ export const useSelect = defineStore('selection', () => {
 	 */
 	const add = (p: TPoint) => {
 
-		map.value.set(p.uid, p);
-		triggerRef(map);
+		if (!list.value.some(v => v.uid == p.uid)) {
+			list.value.push(p);
+		}
 
 	}
 
 	const remove = (uid: string) => {
 
-		map.value.delete(uid);
-		triggerRef(map);
-
+		const ind = list.value.findIndex(v => v.uid === uid);
+		if (ind >= 0) {
+			list.value.splice(ind, 1);
+		}
 	}
 
 	const has = (uid: string) => {
-		return map.value.has(uid);
+		return list.value.some(v => v.uid == uid);
 	}
 
 	/**
 	 * Clear list of selected points.
 	 */
 	const clear = () => {
-		map.value.clear();
-		triggerRef(map);
+		list.value.length = 0;
 	}
 
-	const first = () => {
-		for (const e of map.value) {
-			return e[1];
-		}
-		return null;
+	const top = () => {
+		return list.value.length > 0 ? list.value[list.value.length - 1] : null;
 	}
 
 	events.addListener('delete-pt', (uid: string) => {
@@ -67,8 +66,9 @@ export const useSelect = defineStore('selection', () => {
 
 	return {
 
-		first,
-		map,
+		get size() { return list.value.length },
+		top,
+		list,
 		add,
 		remove,
 		clear,
