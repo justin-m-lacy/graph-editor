@@ -1,13 +1,5 @@
 import { TPoint, type ClusterData, type PointData, type TCluster } from "@/types/geom";
-
-export function encodeAll(points: Map<string, TPoint>, clusters: Map<string, TCluster>) {
-
-	return {
-		points: encodePoints(points),
-		clusters: encodeClusters(clusters, points)
-	}
-
-}
+import { round } from "@/util/dom";
 
 export const encodePoints = (points: Map<string, TPoint>) => {
 
@@ -20,7 +12,7 @@ export const encodePoints = (points: Map<string, TPoint>) => {
 			...p
 		} as any;
 
-		data.p = `${Math.round(100 * p.x) / 100},${Math.round(100 * p.y) / 100}`;
+		data.p = `${round(p.x)},${round(p.y)}`;
 
 		delete data.uid;
 		delete data.x;
@@ -70,7 +62,9 @@ export const encodeClusters = (clusters: Map<string, TCluster>, points: Map<stri
 		out.stars = con.stars.map(uid => points.get(uid)?.id ?? null).filter(v => v != null);
 
 		// map links to star index pairs.
-		out.links = con.links.map(link => linkToIndex(con, link)).join('#');
+		out.links = con.links.map(link => linkToIndex(con, link)).filter(v => v).join('#');
+
+		console.log(`links len: ${con.links.length}`);
 
 		res.push(out);
 

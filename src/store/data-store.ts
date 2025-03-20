@@ -19,11 +19,18 @@ export const useDataStore = defineStore('save', () => {
 
 		data,
 
-		points: computed(() => data.value.points),
-
 		getData() { return serializer.write(data.value) },
 
 		setData(v: string) {
+
+			try {
+				const values = serializer.read(v);
+				data.value.points = values.points;
+				data.value.clusters = values.clusters;
+			} catch (err) {
+				console.error(`${err}`)
+			}
+
 
 		}
 

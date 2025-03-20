@@ -1,6 +1,6 @@
 let saveLink: string | null = null;
 
-export const makeLink = (json: string, saveName: string) => {
+export const useFileLink = (json: string, saveName: string) => {
 
 	if (saveLink) URL.revokeObjectURL(saveLink);
 

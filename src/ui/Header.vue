@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { parsePoints } from '@/export/decode';
-import { loadJsonFile } from '@/export/files';
+import { loadJsonFile, useFileLink } from '@/export/files';
 import { useDataStore } from '@/store/data-store';
 import { usePoints } from '@/store/point-store';
 import { TPoint } from '@/types/geom';
@@ -10,6 +10,7 @@ const ptStore = usePoints();
 function exportData() {
 
 	const data = useDataStore().getData();
+	useFileLink(data, 'stars.json');
 
 }
 

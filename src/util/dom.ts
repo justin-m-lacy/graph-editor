@@ -49,6 +49,7 @@ export const positionElm = (el: HTMLElement | undefined, x: number, y: number) =
 
 }
 
-export const round = (n: number) => {
-	return Math.round(n);
+export const round = (n: number, digits: number = 0) => {
+	const ten = Math.pow(10, digits);
+	return Math.round(ten * n) / ten;
 }

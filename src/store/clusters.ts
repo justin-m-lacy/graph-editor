@@ -1,3 +1,4 @@
+import { useDataStore } from "@/store/data-store";
 import { events } from "@/store/events";
 import { TCluster, type TPoint } from "@/types/geom";
 import { NextId } from "@/util/id";
@@ -5,11 +6,12 @@ import { defineStore } from "pinia";
 
 export const useClusters = defineStore('clusters', () => {
 
-	const map = ref<Map<string, TCluster>>(new Map());
+	const dataStore = useDataStore();
+	const map = dataStore.data.clusters;
 
 	const selUid = shallowRef<string | null>(null);
 
-	const selected = computed(() => selUid.value ? map.value.get(selUid.value) ?? null : null);
+	const selected = computed(() => selUid.value ? map.get(selUid.value) ?? null : null);
 
 	const deselect = () => selUid.value = null;
 
@@ -53,7 +55,7 @@ export const useClusters = defineStore('clusters', () => {
 
 	function remove(uid: string) {
 
-		if (map.value.delete(uid)) {
+		if (map.delete(uid)) {
 			if (selUid.value == uid) deselect();
 		}
 
@@ -204,7 +206,7 @@ export const useClusters = defineStore('clusters', () => {
 			links: []
 		});
 
-		map.value.set(con.uid, con);
+		map.set(con.uid, con);
 		selUid.value = con.uid;
 
 		return con;
@@ -218,7 +220,7 @@ export const useClusters = defineStore('clusters', () => {
 	 */
 	const onDeleteStar = (uid: string) => {
 
-		for (const con of map.value.values()) {
+		for (const con of map.values()) {
 
 			const ind = con.stars.findIndex(s => s == uid);
 			if (ind >= 0) {

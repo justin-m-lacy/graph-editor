@@ -67,29 +67,36 @@ const linksRegex = /(?:(\d+),(\d+))#?/ig;
  * @param uids - array of star uids.
  * @returns link pairs as [ [uid1,uid2],[uid3,uid4]...]
  */
-function parseLinks(links: string, uids: string[]) {
+function parseLinks(links: string, uids: string[], points: Map<string, TPoint>) {
 
 	const matches = links.matchAll(linksRegex);
-	const res: Array<[string, string]> = [];
+	const res: Array<[TPoint, TPoint]> = [];
 
 	for (const parts of matches) {
 
 		if (parts.length < 3) {
 			console.warn(`bad link: ${parts[0]}`);
 		}
-		const uid1 = Number.parseInt(parts[1]);
-		const uid2 = Number.parseInt(parts[2]);
+		const ind1 = Number.parseInt(parts[1]);
+		const ind2 = Number.parseInt(parts[2]);
 
-		if (Number.isNaN(uid1) || uid1 < 0 || uid1 >= uids.length) {
-			console.warn(`bad link index: ${parts[0]}: ${uid1}`);
+		if (Number.isNaN(ind1) || ind1 < 0 || ind1 >= uids.length) {
+			console.warn(`bad link index: ${parts[0]}: ${ind1}`);
 			continue;
 		}
-		if (Number.isNaN(uid2) || uid2 < 0 || uid2 >= uids.length) {
-			console.warn(`bad link index: ${parts[0]}: ${uid2}`);
+		if (Number.isNaN(ind2) || ind2 < 0 || ind2 >= uids.length) {
+			console.warn(`bad link index: ${parts[0]}: ${ind2}`);
 			continue;
 		}
 
-		res.push([uids[uid1], uids[uid2]]);
+		const pt1 = points.get(uids[ind1]);
+		const pt2 = points.get(uids[ind2]);
+		if (!pt1 || !pt2) {
+			console.warn(`missing link points: ${uids[ind1]},${uids[ind2]}`);
+			continue;
+		}
+
+		res.push([pt1, pt2]);
 
 	}
 
@@ -116,7 +123,7 @@ export const parseClusters = (arrData: any, points: Map<string, TPoint>) => {
 		obj.stars = raw.stars.map((id: string) => idToUid(points, id));
 
 		/// Map link star-indices to star uids.
-		obj.links = parseLinks(raw.links, obj.stars);
+		obj.links = parseLinks(raw.links, obj.stars, points);
 
 		map.set(obj.uid, obj);
 
