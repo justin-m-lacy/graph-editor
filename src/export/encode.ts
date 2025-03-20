@@ -64,8 +64,6 @@ export const encodeClusters = (clusters: Map<string, TCluster>, points: Map<stri
 		// map links to star index pairs.
 		out.links = con.links.map(link => linkToIndex(con, link)).filter(v => v).join('#');
 
-		console.log(`links len: ${con.links.length}`);
-
 		res.push(out);
 
 	}

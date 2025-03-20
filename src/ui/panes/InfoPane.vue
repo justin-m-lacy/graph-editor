@@ -2,7 +2,7 @@
 import { useClusters } from '@/store/clusters';
 import { usePoints } from '@/store/point-store';
 import { useSelect } from '@/store/select-store';
-import { TPoint } from '../../types/geom';
+import { TCluster, TPoint } from '../../types/geom';
 
 const clusters = useClusters();
 const pointStore = usePoints();
@@ -59,12 +59,12 @@ function removePoints() {
 	clusters.removePoints(select.pts);
 }
 
-function setCluster(uid: string) {
-	clusters.select(uid);
+function setCluster(con: TCluster) {
+	clusters.select(con.uid);
 }
 
-function remove(uid: string) {
-	clusters.remove(uid);
+function deleteCluster(con: TCluster) {
+	clusters.remove(con.uid);
 }
 
 
@@ -100,7 +100,7 @@ watch(() => clusters.selected, (sel) => {
 			</div>
 
 			<button type="button" class="bg-rose-900/50 font-bold py-1 border-t border-blue-950 border-b"
-					@click="remove(curCluster.id)">🗑 Delete Cluster</button>
+					@click="deleteCluster(curCluster)">🗑 Delete Cluster</button>
 
 			<div class="text-sm subheader">Stars</div>
 			<div v-for="s in curStars" :key="s.id" class="px-2 border-b border-black/40"
@@ -116,7 +116,7 @@ watch(() => clusters.selected, (sel) => {
 			<div v-for="[_, con] in clusters.map" class="py-1 border-b border-black/40"
 				 :class="con.uid == curCluster?.uid ? 'font-bold' : ''">
 				<input type="text" class="px-2 w-full bg-transparent" :key="con.uid"
-					   @click="setCluster(con.uid)"
+					   @click="setCluster(con)"
 					   v-model="con.id">
 			</div>
 		</div>
