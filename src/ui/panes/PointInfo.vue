@@ -18,7 +18,7 @@ const topPt = shallowRef<TPoint | null>(null);
 const dragListener: null | ((evt: MouseEvent) => void) = null;
 
 const unlink = () => {
-	clusters.unlinkPoints(select.list);
+	clusters.unlinkPoints(select.pts);
 }
 const deletePt = (uid: string) => {
 	pointStore.deletePt(uid)
@@ -51,7 +51,7 @@ onUnmounted(() => {
 	endDrag();
 });
 
-watch(() => select.list, (sel) => {
+watch(() => select.pts, (sel) => {
 
 	if (sel && sel.length > 0) {
 
@@ -80,17 +80,17 @@ watch(() => select.list, (sel) => {
 			   class="bg-amber-700/40 px-1 text-amber-950 placeholder-amber-950/70">
 		<div class="flex items-center font-semibold text-sm">{{ round(topPt.x) }}, {{ round(topPt.y) }}</div>
 		<input type="color" class="p-0 m-[2px] w-full" v-model="topPt.color">
-		<input type="number" v-model="topPt.r">
+		<input type="number" placeholder="size" v-model="topPt.r">
 
 		<button type="button" class="bg-rose-900/50 border border-black" @click="deletePt(topPt.uid)">🗑</button>
 
 		<div v-if="select.size > 1">( {{ select.size - 1 }} more...)</div>
 		<button type="button" class="bg-rose-900/50 border border-black font-semibold"
 				title="Link in current cluster"
-				@click="clusters.linkAll(select.list)">Link ALL</button>
+				@click="clusters.linkAll(select.pts)">Link ALL</button>
 		<button type="button" class="bg-rose-900/50 border border-black font-semibold"
 				title="Link points in a line"
-				@click="clusters.linkLine(select.list)">Link LINE</button>
+				@click="clusters.linkLine(select.pts)">Link LINE</button>
 		<button type="button" class="bg-rose-900/50 border border-black font-semibold"
 				title="Unlink points in cluster"
 				@click="unlink">Unlink</button>

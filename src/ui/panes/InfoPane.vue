@@ -52,11 +52,11 @@ const starIdClass = (s: TPoint) => {
 }
 
 function addPoints() {
-	clusters.addPoints(select.list);
+	clusters.addPoints(select.pts);
 }
 
 function removePoints() {
-	clusters.removePoints(select.list);
+	clusters.removePoints(select.pts);
 }
 
 function setCluster(uid: string) {
@@ -121,9 +121,9 @@ watch(() => clusters.selected, (sel) => {
 			</div>
 		</div>
 
-		<div class="flex flex-col" v-if="select.list.length > 0">
+		<div class="flex flex-col" v-if="select.pts.length > 0">
 			<div class="subheader">Selected Points</div>
-			<div v-for="p in select.list" :key="p.uid" class="px-1 py-1 border-b border-black/40">
+			<div v-for="p in select.pts" :key="p.uid" class="px-1 py-1 border-b border-black/40">
 				{{ p.id }}
 			</div>
 			<div class="flex justify-stretch font-semibold">

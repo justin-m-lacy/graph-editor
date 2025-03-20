@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useClusters } from '@/store/clusters';
 import { useOptions } from '@/store/options-store';
 import { usePoints } from '@/store/point-store';
 import { useSelect } from '@/store/select-store';
@@ -9,7 +8,6 @@ import { useEventListener } from '@vueuse/core';
 import SvgView from './items/SvgView.vue';
 
 const pointStore = usePoints();
-const clusters = useClusters();
 const viewStore = useViewStore();
 const optsStore = useOptions();
 const selectStore = useSelect();
@@ -20,8 +18,6 @@ let groupDrag = false;
 let prevPt = { x: 0, y: 0 };
 
 const container = ref<HTMLElement>();
-
-const elRef = ref<HTMLElement>();
 
 const onWheel = (e: WheelEvent) => {
 
@@ -34,7 +30,7 @@ const onWheel = (e: WheelEvent) => {
 
 const makePoint = (e: MouseEvent) => {
 
-	const coord = viewStore.toLocal(e, elRef.value!, { x: 0, y: 0 });
+	const coord = viewStore.toLocal(e, container.value!, { x: 0, y: 0 });
 	const p = pointStore.create(
 		coord
 	);
@@ -51,13 +47,13 @@ const mouseMove = (evt: MouseEvent) => {
 
 	if (!dragging) return;
 
-	const drags = selectStore.list;
+	const drags = selectStore.pts;
 	if (drags.length <= 0) return;
 
 	if (groupDrag) {
 
 		const nextPt = { x: 0, y: 0 };
-		viewStore.toLocal(evt, elRef.value!, nextPt,);
+		viewStore.toLocal(evt, container.value!, nextPt,);
 
 		const dx = nextPt.x - prevPt.x;
 		const dy = nextPt.y - prevPt.y;
@@ -71,7 +67,7 @@ const mouseMove = (evt: MouseEvent) => {
 
 	} else {
 
-		viewStore.toLocal(evt, elRef.value!, drags[0]);
+		viewStore.toLocal(evt, container.value!, drags[0]);
 	}
 
 
@@ -89,7 +85,7 @@ const selPoint = (evt: MouseEvent, p: TPoint) => {
 		groupDrag = false;
 	}
 	dragging = true;
-	viewStore.toLocal(evt, elRef.value!, prevPt,);
+	viewStore.toLocal(evt, container.value!, prevPt,);
 
 }
 
@@ -117,24 +113,9 @@ useEventListener('mouseup', stopDrag);
 		 @wheel.prevent="onWheel"
 		 @click="makePoint">
 
-
-		<div ref="elRef" class="relative w-full h-full">
-			<SvgView @clickPoint="selPoint"
-					 :tx="viewStore.tx"
-					 :ty="viewStore.ty"
-					 :scale="viewStore.scale" />
-		</div>
-
-		<!--<div ref="elRef" class="relative w-full h-full"
-			 :style="viewStore.canvasStyle()">
-
-			<Point v-for="[_, p] in pointStore.map" :key="p.uid"
-				   :pt="p" :color="optsStore.ptColor!"
-				   :radius="optsStore.ptRadius ?? 3"
-				   :selected="selectStore.has(p.uid)"
-				   @click.stop
-				   @mousedown="clickPt($event, p)" />
-
-		</div>-->
+		<SvgView @clickPoint="selPoint"
+				 :tx="viewStore.tx"
+				 :ty="viewStore.ty"
+				 :scale="viewStore.scale" />
 	</div>
 </template>

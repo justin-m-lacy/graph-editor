@@ -8,7 +8,7 @@ import { TPoint } from '../types/geom';
 export const useSelect = defineStore('selection', () => {
 
 	/// use list to control select-order.
-	const list = ref<TPoint[]>([]);
+	const pts = ref<TPoint[]>([]);
 
 	/**
 	 * Set selection to a single point.
@@ -16,8 +16,8 @@ export const useSelect = defineStore('selection', () => {
 	 */
 	const select = (p: TPoint) => {
 
-		list.value.length = 0;
-		list.value.push(p);
+		pts.value.length = 0;
+		pts.value.push(p);
 
 	}
 
@@ -27,33 +27,33 @@ export const useSelect = defineStore('selection', () => {
 	 */
 	const add = (p: TPoint) => {
 
-		if (!list.value.some(v => v.uid == p.uid)) {
-			list.value.unshift(p);
+		if (!pts.value.some(v => v.uid == p.uid)) {
+			pts.value.unshift(p);
 		}
 
 	}
 
 	const remove = (uid: string) => {
 
-		const ind = list.value.findIndex(v => v.uid === uid);
+		const ind = pts.value.findIndex(v => v.uid === uid);
 		if (ind >= 0) {
-			list.value.splice(ind, 1);
+			pts.value.splice(ind, 1);
 		}
 	}
 
 	const has = (uid: string) => {
-		return list.value.some(v => v.uid == uid);
+		return pts.value.some(v => v.uid == uid);
 	}
 
 	/**
 	 * Clear list of selected points.
 	 */
 	const clear = () => {
-		list.value.length = 0;
+		pts.value.length = 0;
 	}
 
 	const top = () => {
-		return list.value[0] ?? null;
+		return pts.value[0] ?? null;
 	}
 
 	events.addListener('delete-pt', (uid: string) => {
@@ -63,9 +63,9 @@ export const useSelect = defineStore('selection', () => {
 
 	return {
 
-		get size() { return list.value.length },
+		get size() { return pts.value.length },
 		top,
-		list,
+		pts,
 		add,
 		remove,
 		clear,

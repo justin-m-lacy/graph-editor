@@ -3,16 +3,17 @@ const PadX = 12;
 const PadY = 12;
 
 /**
- * 
+ * Convert event point to local point view.
  * @param evt 
- * @param pt - destination point.
+ * @param elm - html view container.
+ * @param pt 
  * @returns 
  */
 export const toLocalPos = <T extends { x?: number, y?: number }>(
-	evt: MouseEvent | DragEvent, parent: HTMLElement, pt: T,
+	evt: MouseEvent | DragEvent, elm: HTMLElement, pt: T,
 	{ scale = 1, tx = 0, ty = 0 }: { scale: number, tx: number, ty: number }) => {
 
-	const parentRect = parent.getBoundingClientRect();
+	const parentRect = elm.getBoundingClientRect();
 
 	pt.x = (evt.clientX - (parentRect.x + tx)) / scale;
 	pt.y = (evt.clientY - (parentRect.y + ty)) / scale;
