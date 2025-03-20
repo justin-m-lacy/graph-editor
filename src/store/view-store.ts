@@ -14,7 +14,11 @@ export const useViewStore = defineStore('canvas', () => {
 	const toLocal = <T extends { x?: number, y?: number }>(
 		evt: MouseEvent | DragEvent, parent: HTMLElement, pt: T) => {
 
-		return toLocalPos(evt, parent, pt, scale.value)
+		return toLocalPos(evt, parent, pt, {
+			tx: tx.value,
+			ty: ty.value,
+			scale: scale.value
+		})
 
 	}
 

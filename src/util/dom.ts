@@ -10,17 +10,12 @@ const PadY = 12;
  */
 export const toLocalPos = <T extends { x?: number, y?: number }>(
 	evt: MouseEvent | DragEvent, parent: HTMLElement, pt: T,
-	scale: number = 1) => {
+	{ scale = 1, tx = 0, ty = 0 }: { scale: number, tx: number, ty: number }) => {
 
-	parent ??= (evt.target as HTMLElement).parentElement ?? document.body;
 	const parentRect = parent.getBoundingClientRect();
 
-	//console.log(`client: ${evt.clientX}`);
-	//console.log(`parent: ${parentRect.x}`);
-	//console.log(`scale: ${scale}`);
-
-	pt.x = (evt.clientX - parentRect.x) / scale;
-	pt.y = (evt.clientY - parentRect.y) / scale;
+	pt.x = (evt.clientX - (parentRect.x + tx)) / scale;
+	pt.y = (evt.clientY - (parentRect.y + ty)) / scale;
 
 	return pt;
 

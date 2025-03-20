@@ -6,8 +6,7 @@ import { useSelect } from '@/store/select-store';
 import { useViewStore } from '@/store/view-store';
 import { TPoint } from '@/types/geom';
 import { useEventListener } from '@vueuse/core';
-import DrawClusters from './items/DrawClusters.vue';
-import Point from './items/Point.vue';
+import SvgView from './items/SvgView.vue';
 
 const pointStore = usePoints();
 const clusters = useClusters();
@@ -33,9 +32,7 @@ const onWheel = (e: WheelEvent) => {
 
 }
 
-const makePt = (e: MouseEvent) => {
-
-	clusters.deselect();
+const makePoint = (e: MouseEvent) => {
 
 	const coord = viewStore.toLocal(e, elRef.value!, { x: 0, y: 0 });
 	const p = pointStore.create(
@@ -47,13 +44,6 @@ const makePt = (e: MouseEvent) => {
 	} else {
 		selectStore.select(p);
 	}
-
-}
-
-const addCluster = (uid: string) => {
-
-	const con = clusters.selected ?? clusters.create();
-	clusters.addPt(con, uid);
 
 }
 
@@ -87,7 +77,7 @@ const mouseMove = (evt: MouseEvent) => {
 
 }
 
-const clickPt = (evt: MouseEvent, p: TPoint) => {
+const selPoint = (evt: MouseEvent, p: TPoint) => {
 
 	if (evt.shiftKey) {
 
@@ -125,12 +115,17 @@ useEventListener('mouseup', stopDrag);
 		 :style="{ backgroundColor: optsStore.opts.bgColor ?? 'blue' }"
 		 @mousemove="mouseMove"
 		 @wheel.prevent="onWheel"
-		 @click="makePt">
+		 @click="makePoint">
 
 
-		<DrawClusters :tx="viewStore.tx" :ty="viewStore.ty" :scale="viewStore.scale" />
+		<div ref="elRef" class="relative w-full h-full">
+			<SvgView @clickPoint="selPoint"
+					 :tx="viewStore.tx"
+					 :ty="viewStore.ty"
+					 :scale="viewStore.scale" />
+		</div>
 
-		<div ref="elRef" class="relative w-full h-full"
+		<!--<div ref="elRef" class="relative w-full h-full"
 			 :style="viewStore.canvasStyle()">
 
 			<Point v-for="[_, p] in pointStore.map" :key="p.uid"
@@ -140,6 +135,6 @@ useEventListener('mouseup', stopDrag);
 				   @click.stop
 				   @mousedown="clickPt($event, p)" />
 
-		</div>
+		</div>-->
 	</div>
 </template>
