@@ -5,7 +5,7 @@ import { useSelect } from '@/store/select-store';
 import { useViewStore } from '@/store/view-store';
 import { TPoint } from '@/types/geom';
 import { positionElm } from "@/util/dom";
-import { round } from '../util/dom';
+import { round } from '../../util/dom';
 
 const clusters = useClusters();
 const select = useSelect();
@@ -16,10 +16,10 @@ const elRef = shallowRef<HTMLElement>();
 const topPt = shallowRef<TPoint | null>(null);
 
 const unlink = () => {
-	clusters.unlink(select.list);
+	clusters.unlinkPoints(select.list);
 }
 const linkAll = () => {
-	clusters.link(select.list);
+	clusters.linkPoints(select.list);
 }
 
 const deletePt = (uid: string) => {

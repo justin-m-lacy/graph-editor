@@ -5,9 +5,10 @@ export interface TPoint {
 
 	id: string,
 
+	r?: number,
 	color?: string,
 	blur?: number,
-	r: number,
+
 
 	x: number, y: number
 }

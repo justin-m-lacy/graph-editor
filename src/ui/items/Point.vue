@@ -3,6 +3,7 @@ import { TPoint } from '@/types/geom';
 const props = defineProps<{
 	pt: TPoint,
 	color: string,
+	radius: number,
 	selected?: boolean
 }>();
 
@@ -27,7 +28,7 @@ const style = computed(() => {
 		 :height="size"
 		 :style="style"
 		 :class="selected ? 'outline-2 outline-black outline-dashed' : undefined">
-		<circle cx="50%" cy="50%" r="40%" :fill="'black'" />
+		<circle cx="50%" cy="50%" r="40%" :fill="pt.color ?? color" />
 	</svg>
 
 	<!--<div class="absolute" draggable="true" :style="style">

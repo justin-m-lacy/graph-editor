@@ -35,8 +35,9 @@ const onWheel = (e: WheelEvent) => {
 
 const makePt = (e: MouseEvent) => {
 
-	const coord = viewStore.toLocal(e, elRef.value!, { x: 0, y: 0 });
+	clusters.deselect();
 
+	const coord = viewStore.toLocal(e, elRef.value!, { x: 0, y: 0 });
 	const p = pointStore.create(
 		coord
 	);
@@ -134,6 +135,7 @@ useEventListener('mouseup', stopDrag);
 
 			<Point v-for="[_, p] in pointStore.map" :key="p.uid"
 				   :pt="p" :color="optsStore.ptColor!"
+				   :radius="optsStore.ptRadius ?? 3"
 				   :selected="selectStore.has(p.uid)"
 				   @click.stop
 				   @mousedown="clickPt($event, p)" />

@@ -26,7 +26,7 @@ const drawPoints = (ctx: CanvasRenderingContext2D) => {
 
 const drawClusters = (ctx: CanvasRenderingContext2D) => {
 
-	const base = opts.linesColor ?? '#000';
+	const base = opts.lineColor ?? '#000';
 
 	for (const con of clusters.map.values()) {
 

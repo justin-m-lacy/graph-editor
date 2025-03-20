@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import ClustersInfo from './ClustersInfo.vue';
 import Header from './Header.vue';
-import OptionsPane from './OptionsPane.vue';
-import PointInfo from './PointInfo.vue';
+import ClustersInfo from './panes/ClustersInfo.vue';
+import OptionsPane from './panes/OptionsPane.vue';
+import PointInfo from './panes/PointInfo.vue';
 import ViewPane from './ViewPane.vue';
 
 </script>

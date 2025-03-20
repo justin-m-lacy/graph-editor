@@ -4,11 +4,15 @@ import { defineStore } from "pinia";
 type TOpts = {
 	bgColor?: string,
 	ptColor?: string,
-	linesColor?: string,
+	ptRadius?: number,
+	lineColor?: string,
+	lineSelectColor?: string;
 	blur?: boolean | number
 }
 
 const makeOpt = <K extends keyof TOpts>(ref: Ref<TOpts>, s: K, defaultVal?: TOpts[K]) => {
+
+	ref.value[s] ??= defaultVal;
 
 	return computed<TOpts[K] | undefined>({
 		get() { return ref.value[s] ?? defaultVal; },
@@ -26,7 +30,9 @@ export const useOptions = defineStore('options', () => {
 
 	const bgColor = makeOpt(opts, 'bgColor');
 	const ptColor = makeOpt(opts, 'ptColor', 'black');
-	const linesColor = makeOpt(opts, 'linesColor');
+	const ptRadius = makeOpt(opts, 'ptRadius', 2);
+	const lineColor = makeOpt(opts, 'lineColor');
+	const lineSelectColor = makeOpt(opts, 'lineSelectColor', '#ee0000');
 
 	return {
 
@@ -34,7 +40,9 @@ export const useOptions = defineStore('options', () => {
 
 		bgColor,
 		ptColor,
-		linesColor,
+		ptRadius,
+		lineColor,
+		lineSelectColor,
 
 		setVal<K extends keyof TOpts>(s: K, v: TOpts[K]) {
 			opts.value[s] = v;

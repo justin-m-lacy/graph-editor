@@ -27,7 +27,6 @@ export const usePoints = defineStore('points', () => {
 
 		pt.x = obj.x ?? 100;
 		pt.y = obj.y ?? 100;
-		pt.r ??= 4;
 
 		points.value.set(pt.id, pt as TPoint);
 

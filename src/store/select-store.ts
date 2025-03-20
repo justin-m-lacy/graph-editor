@@ -11,7 +11,7 @@ export const useSelect = defineStore('selection', () => {
 	const list = ref<TPoint[]>([]);
 
 	/**
-	 * Set selection to only point.
+	 * Set selection to a single point.
 	 * @param p 
 	 */
 	const select = (p: TPoint) => {

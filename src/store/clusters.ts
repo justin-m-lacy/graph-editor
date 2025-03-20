@@ -25,10 +25,38 @@ export const useClusters = defineStore('clusters', () => {
 		selUid.value = uid ?? null;
 	}
 
+	const addPoints = (pts: TPoint[], con: TCluster | null = selected.value,) => {
+
+		if (!con) con = create();
+
+		for (let i = 0; i < pts.length; i++) {
+			addPt(con, pts[i].uid);
+		}
+
+	}
+
 	const addPt = (con: TCluster, uid: string) => {
 		if (!con.stars.includes(uid)) {
 			con.stars.push(uid);
 		}
+	}
+
+	const removePoints = (pts: TPoint[], con: TCluster | null = selected.value,) => {
+
+		if (!con) con = create();
+
+		for (let i = 0; i < pts.length; i++) {
+			removePt(con, pts[i]);
+		}
+
+	}
+
+	function removePt(con: TCluster, p: TPoint) {
+
+		unlinkPt(con, p);
+		const ind = con.stars.findIndex(v => v == p.uid);
+		if (ind >= 0) con.stars.splice(ind, 1);
+
 	}
 
 	function remove(uid: string) {
@@ -39,7 +67,9 @@ export const useClusters = defineStore('clusters', () => {
 
 	}
 
-	function linkPts(links: Array<[TPoint, TPoint]>, p1: TPoint, p2: TPoint) {
+	function linkPts(con: TCluster, p1: TPoint, p2: TPoint) {
+
+		const links = con.links;
 
 		for (let i = links.length - 1; i >= 0; i--) {
 
@@ -53,6 +83,29 @@ export const useClusters = defineStore('clusters', () => {
 
 		}
 		links.push([p1, p2]);
+
+	}
+
+	/**
+	 * Remove any links containing point.
+	 * @param links 
+	 * @param p1 
+	 */
+	function unlinkPt(con: TCluster, p1: TPoint) {
+
+		const links = con.links;
+
+		for (let i = links.length - 1; i >= 0; i--) {
+
+			// check link already existing.
+			const link = links[i];
+			if (link[0].uid == p1.uid || link[1].uid === p1.uid) {
+				// remove link.
+				link.splice(i, 1);
+			}
+
+		}
+
 
 	}
 
@@ -80,7 +133,7 @@ export const useClusters = defineStore('clusters', () => {
 	 * Link all points in cluster.
 	 * @param ids 
 	 */
-	function link(pts: TPoint[]) {
+	function linkPoints(pts: TPoint[]) {
 
 		// current cluster.
 		const cur = selected.value ?? create();
@@ -91,7 +144,7 @@ export const useClusters = defineStore('clusters', () => {
 			addPt(cur, pts[i].id);
 
 			for (let j = i - 1; j >= 0; j--) {
-				linkPts(cur.links, pts[i], pts[j]);
+				linkPts(cur, pts[i], pts[j]);
 			}
 
 		}
@@ -102,7 +155,7 @@ export const useClusters = defineStore('clusters', () => {
 	 * Unlink points in cluster.
 	 * @param ids 
 	 */
-	function unlink(pts: TPoint[]) {
+	function unlinkPoints(pts: TPoint[]) {
 
 		// current cluster.
 		const cur = selected.value;
@@ -158,11 +211,14 @@ export const useClusters = defineStore('clusters', () => {
 
 	return {
 		addPt,
+		addPoints,
 		get map() { return map },
 		create,
 		remove,
-		link,
-		unlink,
+		removePt,
+		removePoints,
+		linkPoints,
+		unlinkPoints,
 		select,
 		selected,
 		deselect,
