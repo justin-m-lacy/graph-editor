@@ -18,9 +18,6 @@ const topPt = shallowRef<TPoint | null>(null);
 const unlink = () => {
 	clusters.unlinkPoints(select.list);
 }
-const linkAll = () => {
-	clusters.linkPoints(select.list);
-}
 
 const deletePt = (uid: string) => {
 	pointStore.deletePt(uid)
@@ -59,10 +56,13 @@ watch(() => select.list, (sel) => {
 		<button type="button" class="bg-rose-900/50 border border-black" @click="deletePt(topPt.uid)">🗑</button>
 
 		<div v-if="select.size > 1">( {{ select.size - 1 }} more...)</div>
-		<button type="button" class="bg-rose-900/50 border border-black"
+		<button type="button" class="bg-rose-900/50 border border-black font-semibold"
 				title="Link in current cluster"
-				@click="linkAll">Link All</button>
-		<button type="button" class="bg-rose-900/50 border border-black"
+				@click="clusters.linkAll(select.list)">Link ALL</button>
+		<button type="button" class="bg-rose-900/50 border border-black font-semibold"
+				title="Link points in a line"
+				@click="clusters.linkLine(select.list)">Link LINE</button>
+		<button type="button" class="bg-rose-900/50 border border-black font-semibold"
 				title="Unlink points in cluster"
 				@click="unlink">Unlink</button>
 	</div>

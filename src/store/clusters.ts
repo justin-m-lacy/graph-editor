@@ -36,7 +36,6 @@ export const useClusters = defineStore('clusters', () => {
 	}
 
 	const addPt = (con: TCluster, uid: string) => {
-		console.log(`add uid: ${uid}`);
 		if (!con.stars.includes(uid)) {
 			con.stars.push(uid);
 		}
@@ -142,7 +141,7 @@ export const useClusters = defineStore('clusters', () => {
 	 * Link all points in cluster.
 	 * @param ids 
 	 */
-	function linkPoints(pts: TPoint[]) {
+	function linkAll(pts: TPoint[]) {
 
 		// current cluster.
 		const cur = selected.value ?? create();
@@ -150,12 +149,34 @@ export const useClusters = defineStore('clusters', () => {
 
 		for (let i = pts.length - 1; i >= 0; i--) {
 
-			addPt(cur, pts[i].id);
+			addPt(cur, pts[i].uid);
 
 			for (let j = i - 1; j >= 0; j--) {
 				linkPts(cur, pts[i], pts[j]);
 			}
 
+		}
+
+	}
+
+	/**
+	 * Link points in a line.
+	 * @param ids 
+	 */
+	function linkLine(pts: TPoint[]) {
+
+		// current cluster.
+		const cur = selected.value ?? create();
+		if (pts.length <= 1) return;
+
+		for (let i = 0; i < pts.length; i++) {
+
+			addPt(cur, pts[i].uid);
+
+			let j = i + 1;
+			if (j < pts.length) {
+				linkPts(cur, pts[i], pts[j]);
+			}
 		}
 
 	}
@@ -227,7 +248,8 @@ export const useClusters = defineStore('clusters', () => {
 		remove,
 		removePt,
 		removePoints,
-		linkPoints,
+		linkLine,
+		linkAll,
 		unlinkPoints,
 		select,
 		selected,
