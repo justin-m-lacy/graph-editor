@@ -120,6 +120,14 @@ body {
   }
 }
 
+.header {
+  @apply border-b border-t border-black font-bold bg-amber-700/80 px-1;
+}
+
+.subheader {
+  @apply border-b border-t border-black bg-amber-700/40 font-semibold px-1;
+}
+
 .auto-fade-out {
   animation: autoFade 200ms ease-out reverse;
 }

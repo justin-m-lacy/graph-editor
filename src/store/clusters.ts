@@ -7,7 +7,7 @@ export const useClusters = defineStore('clusters', () => {
 
 	const map = ref<Map<string, TCluster>>(new Map());
 
-	const selUid = ref<string | null>(null);
+	const selUid = shallowRef<string | null>(null);
 
 	const selected = computed(() => selUid.value ? map.value.get(selUid.value) ?? null : null);
 
@@ -36,6 +36,7 @@ export const useClusters = defineStore('clusters', () => {
 	}
 
 	const addPt = (con: TCluster, uid: string) => {
+		console.log(`add uid: ${uid}`);
 		if (!con.stars.includes(uid)) {
 			con.stars.push(uid);
 		}
@@ -67,19 +68,25 @@ export const useClusters = defineStore('clusters', () => {
 
 	}
 
+	/**
+	 * Link two points within cluster.
+	 * @param con 
+	 * @param p1 
+	 * @param p2 
+	 * @returns 
+	 */
 	function linkPts(con: TCluster, p1: TPoint, p2: TPoint) {
 
 		const links = con.links;
 
 		for (let i = links.length - 1; i >= 0; i--) {
 
-			// check link already existing.
 			const link = links[i];
-			if (link[0].uid == p1.uid && link[1].uid == p2.uid) {
+			// check link already exists.
+			if ((link[0].uid == p1.uid && link[1].uid == p2.uid) ||
+				(link[0].uid == p2.uid && link[1].uid == p1.uid)) {
 				return;
-			} else if (link[0].uid == p2.uid && link[1].uid == p1.uid) {
-				return;
-			}
+			};
 
 		}
 		links.push([p1, p2]);
@@ -89,17 +96,19 @@ export const useClusters = defineStore('clusters', () => {
 	/**
 	 * Remove any links containing point.
 	 * @param links 
-	 * @param p1 
+	 * @param ptId 
 	 */
-	function unlinkPt(con: TCluster, p1: TPoint) {
+	function unlinkPt(con: TCluster, ptId: TPoint | string) {
 
 		const links = con.links;
+
+		if (typeof ptId == 'object') ptId = ptId.uid;
 
 		for (let i = links.length - 1; i >= 0; i--) {
 
 			// check link already existing.
 			const link = links[i];
-			if (link[0].uid == p1.uid || link[1].uid === p1.uid) {
+			if (link[0].uid == ptId || link[1].uid === ptId) {
 				// remove link.
 				link.splice(i, 1);
 			}
@@ -182,8 +191,8 @@ export const useClusters = defineStore('clusters', () => {
 			links: []
 		});
 
-		map.value.set(con.id, con);
-		selUid.value = con.id;
+		map.value.set(con.uid, con);
+		selUid.value = con.uid;
 
 		return con;
 
@@ -201,6 +210,7 @@ export const useClusters = defineStore('clusters', () => {
 			const ind = con.stars.findIndex(s => s == uid);
 			if (ind >= 0) {
 				con.stars.splice(ind, 1);
+				unlinkPt(con, uid);
 			}
 
 		}

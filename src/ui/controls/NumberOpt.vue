@@ -14,6 +14,6 @@ const opts = useOptions();
 		<div class="text-sm font-semibold pr-1">{{ opt }}</div>
 		<input type="number" class="grow" :placeholder="placeholder ?? opt" min="0" max="8"
 			   :value="opts.getVal(opt as any)"
-			   @change="opts.setVal(opt as any, ($event.target as HTMLInputElement).value)">
+			   @change="opts.setVal(opt as any, Number(($event.target as HTMLInputElement).value))">
 	</div>
 </template>
