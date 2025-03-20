@@ -34,7 +34,8 @@ export const encodePoints = (points: Map<string, TPoint>) => {
 
 
 /**
- * Convert point links to pair of index numbers.
+ * Convert point links to pairs of point indices
+ * in the cluster point list.
  * @param con 
  * @param link 
  */

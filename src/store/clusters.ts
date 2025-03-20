@@ -253,8 +253,7 @@ export const useClusters = defineStore('clusters', () => {
 		unlinkPoints,
 		select,
 		selected,
-		deselect,
-		setList
+		deselect
 	}
 
 

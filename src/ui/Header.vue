@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { decodePoints } from '@/export/decode';
+import { parsePoints } from '@/export/decode';
 import { encodePoints } from '@/export/encode';
 import { loadJsonFile } from '@/export/files';
 import { usePoints } from '@/store/point-store';
@@ -41,7 +41,7 @@ const loadFile = async (files: FileList) => {
 		const fileData = await loadJsonFile<TPoint[]>(files);
 		if (fileData) {
 
-			const points = decodePoints(fileData);
+			const points = parsePoints(fileData);
 			if (points) {
 				ptStore.setPoints(points);
 			}

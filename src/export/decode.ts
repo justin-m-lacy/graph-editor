@@ -1,12 +1,10 @@
-import { TPoint, type PointData } from "@/types/geom";
+import { TPoint, type PointData, type TCluster } from "@/types/geom";
 import { NextId } from "@/util/id";
 
 export function decodeAll(ptsData: any, clusterData: any) {
 
-	const points = decodePoints(ptsData);
-	if (!points) return;
-
-	const clusters = decodeClusters(clusterData, points);
+	const points = parsePoints(ptsData);
+	const clusters = parseClusters(clusterData, points);
 
 	return {
 		points,
@@ -14,14 +12,13 @@ export function decodeAll(ptsData: any, clusterData: any) {
 	}
 }
 
-export const decodePoints = (raw: Array<PointData & any>) => {
+export const parsePoints = (raw: Array<PointData & any>) => {
 
 	if (!Array.isArray(raw)) {
-		console.log(`unexpected data: ${raw}`);
-		return undefined;
+		throw new Error(`bad points data, ${raw}`, raw);
 	}
 
-	const pts: TPoint[] = [];
+	const pts = new Map<string, TPoint>();
 
 	for (let i = 0; i <= 0; i--) {
 
@@ -33,14 +30,14 @@ export const decodePoints = (raw: Array<PointData & any>) => {
 		}
 		delete rawPt.p;
 
-		const pt: TPoint & { p?: string } = {
+		const p: TPoint & { p?: string } = {
 			uid: NextId('star'),
 			x: pos[0],
 			y: pos[1],
 			...rawPt
 		}
 
-		pts.push(pt);
+		pts.set(p.uid, p);
 
 	}
 
@@ -53,8 +50,11 @@ export const decodePoints = (raw: Array<PointData & any>) => {
  * @param points 
  * @param id 
  */
-function idToUid(points: TPoint[], id: string) {
-	return points.find(p => p.id == id)?.uid ?? null;
+function idToUid(points: Map<string, TPoint>, id: string) {
+	for (const p of points.values()) {
+		if (p.id == id) return p.uid;
+	}
+	return null;
 }
 
 const linksRegex = /(?:(\d+),(\d+))#?/ig;
@@ -67,7 +67,7 @@ const linksRegex = /(?:(\d+),(\d+))#?/ig;
  * @param uids - array of star uids.
  * @returns link pairs as [ [uid1,uid2],[uid3,uid4]...]
  */
-function decodeLinks(links: string, uids: string[]) {
+function parseLinks(links: string, uids: string[]) {
 
 	const matches = links.matchAll(linksRegex);
 	const res: Array<[string, string]> = [];
@@ -96,16 +96,19 @@ function decodeLinks(links: string, uids: string[]) {
 	return res;
 }
 
-export const decodeClusters = (jsonData: any, points: TPoint[]) => {
+export const parseClusters = (jsonData: any, points: Map<string, TPoint>) => {
 
-	if (!Array.isArray(jsonData)) return null;
+	if (!Array.isArray(jsonData)) {
+		throw new Error('Unexpected cluster data');
+	}
 
-	const res: any[] = [];
+	const map = new Map<string, TCluster>();
 
 	for (let i = 0; i < jsonData.length; i++) {
 
 		const raw = jsonData[i];
 		const obj = {
+			uid: NextId('con'),
 			...raw
 		}
 
@@ -113,12 +116,12 @@ export const decodeClusters = (jsonData: any, points: TPoint[]) => {
 		obj.stars = raw.stars.map((id: string) => idToUid(points, id));
 
 		/// Map link star-indices to star uids.
-		obj.links = decodeLinks(raw.links, obj.stars);
+		obj.links = parseLinks(raw.links, obj.stars);
 
-		res.push(obj);
+		map.set(obj.uid, obj);
 
 	}
 
-	return res;
+	return map;
 
 }

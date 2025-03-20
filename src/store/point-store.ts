@@ -7,11 +7,18 @@ export const usePoints = defineStore('points', () => {
 
 	const points = ref<Map<string, TPoint>>(new Map());
 
-	const setPoints = (pts: TPoint[]) => {
+	const setPoints = (pts: TPoint[] | Map<string, TPoint>) => {
 
 		points.value.clear();
-		for (const pt of pts) {
-			points.value.set(pt.uid, pt);
+
+		if (Array.isArray(pts)) {
+			for (const pt of pts) {
+				points.value.set(pt.uid, pt);
+			}
+		} else {
+			for (const p of pts.values()) {
+				points.value.set(p.uid, p);
+			}
 		}
 
 	}
