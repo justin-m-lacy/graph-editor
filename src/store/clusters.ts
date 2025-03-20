@@ -40,16 +40,18 @@ export const useClusters = defineStore('clusters', () => {
 		if (!con) con = create();
 
 		for (let i = 0; i < pts.length; i++) {
-			removePt(con, pts[i]);
+			removePt(con, pts[i].uid);
 		}
 
 	}
 
-	function removePt(con: TCluster, p: TPoint) {
+	function removePt(con: TCluster, uid: string) {
 
-		unlinkPt(con, p);
-		const ind = con.stars.findIndex(v => v == p.uid);
-		if (ind >= 0) con.stars.splice(ind, 1);
+		const ind = con.stars.findIndex(v => v == uid);
+		if (ind >= 0) {
+			con.stars.splice(ind, 1);
+			unlinkPt(con, uid);
+		}
 
 	}
 
@@ -91,23 +93,21 @@ export const useClusters = defineStore('clusters', () => {
 	 * @param links 
 	 * @param ptId 
 	 */
-	function unlinkPt(con: TCluster, ptId: TPoint | string) {
+	function unlinkPt(con: TCluster, ptId: string) {
+
+		const newLinks = <[TPoint, TPoint][]>[];
 
 		const links = con.links;
-
-		if (typeof ptId == 'object') ptId = ptId.uid;
-
 		for (let i = links.length - 1; i >= 0; i--) {
 
 			// check link already existing.
 			const link = links[i];
-			if (link[0].uid == ptId || link[1].uid === ptId) {
-				// remove link.
-				link.splice(i, 1);
+			if (link[0].uid != ptId && link[1].uid != ptId) {
+				newLinks.push(link);
 			}
 
 		}
-
+		con.links = newLinks;
 
 	}
 
@@ -221,13 +221,7 @@ export const useClusters = defineStore('clusters', () => {
 	const onDeleteStar = (uid: string) => {
 
 		for (const con of map.values()) {
-
-			const ind = con.stars.findIndex(s => s == uid);
-			if (ind >= 0) {
-				con.stars.splice(ind, 1);
-				unlinkPt(con, uid);
-			}
-
+			removePt(con, uid);
 		}
 
 	}
@@ -240,7 +234,6 @@ export const useClusters = defineStore('clusters', () => {
 		get map() { return map },
 		create,
 		remove,
-		removePt,
 		removePoints,
 		linkLine,
 		linkAll,

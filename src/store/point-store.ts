@@ -51,7 +51,6 @@ export const usePoints = defineStore('points', () => {
 	const deletePt = (uid: string) => {
 
 		if (points.delete(uid)) {
-			//triggerRef(points);
 			events.emit('delete-pt', uid);
 		}
 

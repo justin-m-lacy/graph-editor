@@ -9,19 +9,14 @@ import { round } from '../../util/dom';
 
 const clusters = useClusters();
 const select = useSelect();
-const pointStore = usePoints();
+const points = usePoints();
 const view = useViewStore();
 
 const elRef = shallowRef<HTMLElement>();
 const topPt = shallowRef<TPoint | null>(null);
 
-const dragListener: null | ((evt: MouseEvent) => void) = null;
-
 const unlink = () => {
 	clusters.unlinkPoints(select.pts);
-}
-const deletePt = (uid: string) => {
-	pointStore.deletePt(uid)
 }
 
 const onDrag = (evt: MouseEvent) => {
@@ -82,7 +77,8 @@ watch(() => select.pts, (sel) => {
 		<input type="color" class="p-0 m-[2px] w-full" v-model="topPt.color">
 		<input type="number" placeholder="size" v-model="topPt.r">
 
-		<button type="button" class="bg-rose-900/50 border border-black" @click="deletePt(topPt.uid)">🗑</button>
+		<button type="button" class="bg-rose-900/50 border border-black"
+				@click="points.deletePt(topPt.uid)">🗑</button>
 
 		<div v-if="select.size > 1">( {{ select.size - 1 }} more...)</div>
 		<button type="button" class="bg-rose-900/50 border border-black font-semibold"
