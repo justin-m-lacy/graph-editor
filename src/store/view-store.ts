@@ -1,7 +1,7 @@
 import { toLocalPos } from "@/util/dom";
 import { defineStore } from "pinia";
 
-export const useCanvasStore = defineStore('canvas', () => {
+export const useViewStore = defineStore('canvas', () => {
 
 	const scale = shallowRef<number>(1);
 	const tx = shallowRef<number>(0);

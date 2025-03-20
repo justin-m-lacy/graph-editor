@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useCanvasStore } from '@/store/canvas-store';
 import { useClusters } from '@/store/clusters';
 import { useOptions } from '@/store/options-store';
 import { usePoints } from '@/store/point-store';
 import { useSelect } from '@/store/select-store';
+import { useViewStore } from '@/store/view-store';
 import { TPoint } from '@/types/geom';
 import { useEventListener } from '@vueuse/core';
 import DrawClusters from './items/DrawClusters.vue';
@@ -11,7 +11,7 @@ import Point from './items/Point.vue';
 
 const pointStore = usePoints();
 const clusters = useClusters();
-const canvasStore = useCanvasStore();
+const viewStore = useViewStore();
 const optsStore = useOptions();
 const selectStore = useSelect();
 
@@ -26,16 +26,16 @@ const elRef = ref<HTMLElement>();
 
 const onWheel = (e: WheelEvent) => {
 
-	let s = e.deltaY / 1000 + canvasStore.scale;
+	let s = e.deltaY / 1000 + viewStore.scale;
 	s = Math.max(0.5, Math.min(1.5, s));
 
-	canvasStore.setScale(s);
+	viewStore.setScale(s);
 
 }
 
 const makePt = (e: MouseEvent) => {
 
-	const coord = canvasStore.toLocal(e, elRef.value!, { x: 0, y: 0 });
+	const coord = viewStore.toLocal(e, elRef.value!, { x: 0, y: 0 });
 
 	const p = pointStore.create(
 		coord
@@ -66,7 +66,7 @@ const mouseMove = (evt: MouseEvent) => {
 	if (groupDrag) {
 
 		const nextPt = { x: 0, y: 0 };
-		canvasStore.toLocal(evt, elRef.value!, nextPt,);
+		viewStore.toLocal(evt, elRef.value!, nextPt,);
 
 		const dx = nextPt.x - prevPt.x;
 		const dy = nextPt.y - prevPt.y;
@@ -80,7 +80,7 @@ const mouseMove = (evt: MouseEvent) => {
 
 	} else {
 
-		canvasStore.toLocal(evt, elRef.value!, drags[0]);
+		viewStore.toLocal(evt, elRef.value!, drags[0]);
 	}
 
 
@@ -98,7 +98,7 @@ const clickPt = (evt: MouseEvent, p: TPoint) => {
 		groupDrag = false;
 	}
 	dragging = true;
-	canvasStore.toLocal(evt, elRef.value!, prevPt,);
+	viewStore.toLocal(evt, elRef.value!, prevPt,);
 
 }
 
@@ -112,7 +112,7 @@ onMounted(() => {
 	const h = container.value?.clientHeight ?? 0;
 
 	// center. initial position
-	canvasStore.setPos(w / 2, h / 2);
+	viewStore.setPos(w / 2, h / 2);
 
 });
 
@@ -123,13 +123,15 @@ useEventListener('mouseup', stopDrag);
 	<div ref="container" class="relative w-full h-full overflow-hidden border border-black"
 		 :style="{ backgroundColor: optsStore.opts.bgColor ?? 'blue' }"
 		 @mousemove="mouseMove"
+		 @wheel.prevent="onWheel"
 		 @click="makePt">
 
-		<div ref="elRef" class="relative w-full h-full"
-			 :style="canvasStore.canvasStyle()"
-			 @wheel.prevent="onWheel">
 
-			<DrawClusters />
+		<DrawClusters :tx="viewStore.tx" :ty="viewStore.ty" :scale="viewStore.scale" />
+
+		<div ref="elRef" class="relative w-full h-full"
+			 :style="viewStore.canvasStyle()">
+
 			<Point v-for="[_, p] in pointStore.map" :key="p.uid"
 				   :pt="p" :color="optsStore.ptColor!"
 				   :selected="selectStore.has(p.uid)"

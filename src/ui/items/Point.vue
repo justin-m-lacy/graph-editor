@@ -6,6 +6,11 @@ const props = defineProps<{
 	selected?: boolean
 }>();
 
+const size = computed(() => {
+
+	return Math.max(2 * (props.pt.r ?? 4), 6);
+});
+
 const style = computed(() => {
 
 	return {
@@ -18,8 +23,8 @@ const style = computed(() => {
 </script>
 <template>
 	<svg class="absolute box-content rounded-full -translate-x-1/2 -translate-y-1/2 border-2 border-transparent"
-		 :width="2 * (pt.r ?? 4)"
-		 :height="2 * (pt.r ?? 4)"
+		 :width="size"
+		 :height="size"
 		 :style="style"
 		 :class="selected ? 'outline-2 outline-black outline-dashed' : undefined">
 		<circle cx="50%" cy="50%" r="40%" :fill="'black'" />

@@ -83,10 +83,10 @@ export const useClusters = defineStore('clusters', () => {
 	function link(pts: TPoint[]) {
 
 		// current cluster.
-		const cur = selected.value;
-		if (!cur || pts.length <= 1) return;
+		const cur = selected.value ?? create();
+		if (pts.length <= 1) return;
 
-		for (let i = pts.length - 1; i >= 1; i--) {
+		for (let i = pts.length - 1; i >= 0; i--) {
 
 			addPt(cur, pts[i].id);
 
@@ -118,16 +118,16 @@ export const useClusters = defineStore('clusters', () => {
 
 	}
 
-	function create() {
+	function create(): TCluster {
 
 		const uid = NextId('con');
 
-		const con = {
+		const con: TCluster = reactive({
 			uid,
 			id: `con${uid}`,
 			stars: <string[]>[],
 			links: []
-		};
+		});
 
 		map.value.set(con.id, con);
 		selUid.value = con.id;

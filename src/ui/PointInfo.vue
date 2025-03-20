@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useCanvasStore } from '@/store/canvas-store';
 import { useClusters } from '@/store/clusters';
 import { usePoints } from '@/store/point-store';
 import { useSelect } from '@/store/select-store';
+import { useViewStore } from '@/store/view-store';
 import { TPoint } from '@/types/geom';
 import { positionElm } from "@/util/dom";
 import { round } from '../util/dom';
@@ -10,7 +10,7 @@ import { round } from '../util/dom';
 const clusters = useClusters();
 const select = useSelect();
 const pointStore = usePoints();
-const canvas = useCanvasStore();
+const view = useViewStore();
 
 const elRef = shallowRef<HTMLElement>();
 const topPt = shallowRef<TPoint | null>(null);
@@ -33,8 +33,8 @@ watch(() => select.list, (sel) => {
 		const pt = topPt.value = select.top();
 		nextTick(() => {
 			if (pt) positionElm(elRef.value,
-				canvas.tx + canvas.scale * pt.x,
-				canvas.ty + canvas.scale * pt.y)
+				view.tx + view.scale * pt.x,
+				view.ty + view.scale * pt.y)
 		});
 
 	} else {
