@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { parsePoints } from '@/export/decode';
-import { encodePoints } from '@/export/encode';
 import { loadJsonFile } from '@/export/files';
+import { useDataStore } from '@/store/data-store';
 import { usePoints } from '@/store/point-store';
 import { TPoint } from '@/types/geom';
 
 const ptStore = usePoints();
 
-const expPoints = () => {
+function exportData() {
 
-	const json = encodePoints(ptStore.map);
+	const data = useDataStore().getData();
 
 }
 
@@ -68,7 +68,7 @@ const fileDrag = (e: DragEvent) => {
 </script>
 <template>
 	<div class="w-full px-4 bg-slate-900 text-slate-100">
-		<button type="button" @click="expPoints">Export</button>
+		<button type="button" @click="exportData">Export</button>
 		<button type="button" class="btn" id="drop-file"
 				@click.stop.prevent="fileInput?.click()"
 				@drop.prevent="fileDrop" @dragover="fileDrag"

@@ -1,3 +1,4 @@
+import { useDataStore } from "@/store/data-store";
 import { events } from "@/store/events";
 import { TPoint } from "@/types/geom";
 import { NextId } from "@/util/id";
@@ -5,19 +6,21 @@ import { defineStore } from "pinia";
 
 export const usePoints = defineStore('points', () => {
 
-	const points = ref<Map<string, TPoint>>(new Map());
+	const dataStore = useDataStore();
+
+	const points = dataStore.data.points;
 
 	const setPoints = (pts: TPoint[] | Map<string, TPoint>) => {
 
-		points.value.clear();
+		points.clear();
 
 		if (Array.isArray(pts)) {
 			for (const pt of pts) {
-				points.value.set(pt.uid, pt);
+				points.set(pt.uid, pt);
 			}
 		} else {
 			for (const p of pts.values()) {
-				points.value.set(p.uid, p);
+				points.set(p.uid, p);
 			}
 		}
 
@@ -35,20 +38,20 @@ export const usePoints = defineStore('points', () => {
 		pt.x = obj.x ?? 100;
 		pt.y = obj.y ?? 100;
 
-		points.value.set(pt.uid, pt as TPoint);
+		points.set(pt.uid, pt as TPoint);
 
 		return pt as TPoint;
 
 	}
 
 	const get = (uid: string) => {
-		return points.value.get(uid);
+		return points.get(uid);
 	}
 
 	const deletePt = (uid: string) => {
 
-		if (points.value.delete(uid)) {
-			triggerRef(points);
+		if (points.delete(uid)) {
+			//triggerRef(points);
 			events.emit('delete-pt', uid);
 		}
 

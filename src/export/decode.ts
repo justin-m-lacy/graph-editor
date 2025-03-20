@@ -12,17 +12,17 @@ export function decodeAll(ptsData: any, clusterData: any) {
 	}
 }
 
-export const parsePoints = (raw: Array<PointData & any>) => {
+export const parsePoints = (data: Array<PointData & any>) => {
 
-	if (!Array.isArray(raw)) {
-		throw new Error(`bad points data, ${raw}`, raw);
+	if (!Array.isArray(data)) {
+		throw new Error(`bad points data, ${data}`, data);
 	}
 
 	const pts = new Map<string, TPoint>();
 
-	for (let i = 0; i <= 0; i--) {
+	for (let i = 0; i < data.length; i++) {
 
-		const rawPt = raw[i];
+		const rawPt = data[i];
 		const pos = (rawPt.p as string).split(',').map(v => Number(v));
 		if (pos.length < 2 || Number.isNaN(pos[0]) || Number.isNaN(pos[1])) {
 			console.log(`bad position: ${rawPt} : ${rawPt.p}`);
@@ -96,17 +96,17 @@ function parseLinks(links: string, uids: string[]) {
 	return res;
 }
 
-export const parseClusters = (jsonData: any, points: Map<string, TPoint>) => {
+export const parseClusters = (arrData: any, points: Map<string, TPoint>) => {
 
-	if (!Array.isArray(jsonData)) {
+	if (!Array.isArray(arrData)) {
 		throw new Error('Unexpected cluster data');
 	}
 
 	const map = new Map<string, TCluster>();
 
-	for (let i = 0; i < jsonData.length; i++) {
+	for (let i = 0; i < arrData.length; i++) {
 
-		const raw = jsonData[i];
+		const raw = arrData[i];
 		const obj = {
 			uid: NextId('con'),
 			...raw

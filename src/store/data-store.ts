@@ -5,14 +5,28 @@ import { TCluster, TPoint } from '../types/geom';
 
 export const useDataStore = defineStore('save', () => {
 
+	const serializer = PointSerializer();
+
 	const data = useLocalStorage<AppData>('saves', {
 		points: new Map<string, TPoint>(),
 		clusters: new Map<string, TCluster>()
 	}, {
-		eventFilter: debounceFilter(10000),
-		serializer: PointSerializer()
+		eventFilter: debounceFilter(1000),
+		serializer
 	});
 
-	return data;
+	return {
+
+		data,
+
+		points: computed(() => data.value.points),
+
+		getData() { return serializer.write(data.value) },
+
+		setData(v: string) {
+
+		}
+
+	};
 
 });

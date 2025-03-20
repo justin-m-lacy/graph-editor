@@ -11,14 +11,6 @@ export const useClusters = defineStore('clusters', () => {
 
 	const selected = computed(() => selUid.value ? map.value.get(selUid.value) ?? null : null);
 
-	const setList = (arr: TCluster[]) => {
-		map.value.clear();
-		for (const con of arr) {
-			map.value.set(con.uid, con);
-		}
-		deselect();
-	}
-
 	const deselect = () => selUid.value = null;
 
 	const select = (uid?: string) => {

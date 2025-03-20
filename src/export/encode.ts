@@ -16,13 +16,15 @@ export const encodePoints = (points: Map<string, TPoint>) => {
 	for (const p of points.values()) {
 
 		// clone p.
-		const data = JSON.parse(JSON.stringify(p));
+		const data = {
+			...p
+		} as any;
+
+		data.p = `${Math.round(100 * p.x) / 100},${Math.round(100 * p.y) / 100}`;
 
 		delete data.uid;
 		delete data.x;
 		delete data.y;
-
-		data.p = `${p.x},${p.y}`;
 
 		res.push(data);
 
