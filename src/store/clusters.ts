@@ -234,6 +234,7 @@ export const useClusters = defineStore('clusters', () => {
 		get map() { return map },
 		create,
 		remove,
+		removePt,
 		removePoints,
 		linkLine,
 		linkAll,

@@ -88,7 +88,7 @@
 }
 
 input[type=text], select {
-  @apply border-none outline-none
+  @apply outline-none
     
 }
 
@@ -121,11 +121,11 @@ body {
 }
 
 .header {
-  @apply border-b border-t border-black font-bold bg-amber-700/80 px-1;
+  @apply border-b border-t border-black font-bold bg-amber-700/80 px-1 select-none;
 }
 
 .subheader {
-  @apply border-b border-t border-black bg-amber-700/40 font-semibold px-1;
+  @apply border-b border-t border-black bg-amber-700/40 font-semibold px-1 select-none;
 }
 
 .auto-fade-out {

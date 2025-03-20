@@ -73,9 +73,13 @@ watch(() => select.pts, (sel) => {
 
 		<input v-model="topPt.id" placeholder="id" @click.stop
 			   class="bg-amber-700/40 px-1 text-amber-950 placeholder-amber-950/70">
-		<div class="flex items-center font-semibold text-sm">{{ round(topPt.x) }}, {{ round(topPt.y) }}</div>
-		<input type="color" class="p-0 m-[2px] w-full" v-model="topPt.color">
-		<input type="number" placeholder="size" v-model="topPt.r">
+
+		<div class="flex justify-between px-1">
+			<div class="flex items-center font-semibold text-sm">{{ round(topPt.x) }}, {{ round(topPt.y) }}</div>
+			<input type="color" class="p-0 w-10 py-0" v-model="topPt.color">
+		</div>
+
+		<input type="number" class="px-1" placeholder="radius" v-model="topPt.r">
 
 		<button type="button" class="bg-rose-900/50 border border-black"
 				@click="points.deletePt(topPt.uid)">🗑</button>

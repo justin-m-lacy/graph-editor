@@ -2,6 +2,7 @@
 import { useClusters } from '@/store/clusters';
 import { usePoints } from '@/store/point-store';
 import { useSelect } from '@/store/select-store';
+import EditId from '@/ui/items/EditId.vue';
 import { TCluster, TPoint } from '../../types/geom';
 
 const clusters = useClusters();
@@ -45,18 +46,11 @@ function addConPt(evt: MouseEvent, p: TPoint) {
 }
 
 const starIdClass = (s: TPoint) => {
-
-	return {
-		'font-bold': select.has(s.uid)
-	}
+	return select.has(s.uid) ? 'font-bold' : undefined;
 }
 
 function addPoints() {
 	clusters.addPoints(select.pts);
-}
-
-function removePoints() {
-	clusters.removePoints(select.pts);
 }
 
 function setCluster(con: TCluster) {
@@ -74,17 +68,18 @@ watch(() => clusters.selected, (sel) => {
 
 </script>
 <template>
-	<div class="flex flex-col  bg-earth-200 min-w-52 border-r border-black">
+	<div class="flex flex-col  bg-earth-200 min-w-52 w-52 transition-all
+		border-r border-black select-none">
 
-		<button type="button" class="py-1 font-bold"
+		<button type="button" class="py-1 font-bold bg-blue-500/75"
 				@click.stop="clusters.create()">+ New Cluster</button>
 
-		<div v-if="curCluster" class="flex flex-col min-h-52 border-t-2 border-b border-black
-				 border-l-amber-950">
+		<div v-if="curCluster" class="flex flex-col items-stretch transition-all
+		border-t-2 border-b border-black">
 
-			<div class="flex justify-between font-bold header">
-				<div>cluster: {{ curCluster.id }}</div>
-				<button type="button" @click="clusters.deselect">[ X ]</button>
+			<div class="flex items-center justify-between font-bold header py-1">
+				<EditId :t="curCluster" />
+				<button type="button" @click="clusters.deselect">[X]</button>
 			</div>
 
 
@@ -99,15 +94,20 @@ watch(() => clusters.selected, (sel) => {
 					   v-model="curCluster.color">
 			</div>
 
-			<button type="button" class="bg-rose-900/50 font-bold py-1 border-t border-blue-950 border-b"
-					@click="deleteCluster(curCluster)">🗑 Delete Cluster</button>
+
 
 			<div class="text-sm subheader">Stars</div>
-			<div v-for="s in curStars" :key="s.id" class="px-2 border-b border-black/40"
-				 :class="starIdClass(s)"
-				 @click="addConPt($event, s)">
-				{{ s.id }}
+			<div v-for="s in curStars" class="flex justify-between pr-1 border-b border-black/40">
+				<EditId :key="s.id" :t="s"
+						:class="starIdClass(s)"
+						@click="addConPt($event, s)">
+					{{ s.id }}
+				</EditId>
+				<button type="button" class="text-xs" @click="clusters.removePt(curCluster, s.uid)">[x]</button>
 			</div>
+
+			<button type="button" class="bg-rose-900/50 font-bold py-1 border-t border-blue-950 border-b"
+					@click="deleteCluster(curCluster)">🗑 Delete Cluster</button>
 		</div>
 
 
@@ -126,10 +126,15 @@ watch(() => clusters.selected, (sel) => {
 			<div v-for="p in select.pts" :key="p.uid" class="px-1 py-1 border-b border-black/40">
 				{{ p.id }}
 			</div>
+			<div class="flex text-xs justify-center bg-amber-500/30">Add/Remove to Cluster:</div>
 			<div class="flex justify-stretch font-semibold">
-				<button type="button" class="bg-lime-700/90 px-2 grow" @click="addPoints">+ Add All</button>
-				<button type="button" class="bg-maroon-800/85 px-2 grow" title="Remove from Cluster"
-						@click="removePoints">- Remove</button>
+				<button type="button" class="bg-blue-500/75 px-2 basis-1/2 border-black/20 border border-t-0"
+						@click="addPoints">+ Add
+					All</button>
+				<button type="button"
+						class="bg-red-700/85 px-2 basis-1/2  border-black/30 border border-t-0 "
+						title="Remove from Cluster"
+						@click="clusters.removePoints(select.pts)">Remove All</button>
 			</div>
 		</div>
 
