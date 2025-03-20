@@ -15,13 +15,41 @@ const view = useViewStore();
 const elRef = shallowRef<HTMLElement>();
 const topPt = shallowRef<TPoint | null>(null);
 
+const dragListener: null | ((evt: MouseEvent) => void) = null;
+
 const unlink = () => {
 	clusters.unlinkPoints(select.list);
 }
-
 const deletePt = (uid: string) => {
 	pointStore.deletePt(uid)
 }
+
+const onDrag = (evt: MouseEvent) => {
+
+	const elm = elRef.value;
+	if (!elm) return;
+
+	const parent = elm.parentElement!;
+
+	const tx = evt.clientX - parent.offsetLeft;
+	const ty = evt.clientY - parent.offsetTop;
+	positionElm(elm, tx, ty);
+
+}
+
+function startDrag(evt: MouseEvent) {
+	window.addEventListener('mousemove', onDrag);
+	window.addEventListener('mouseup', endDrag);
+}
+
+function endDrag() {
+	window.removeEventListener('mousemove', onDrag);
+	window.removeEventListener('mouseup', endDrag);
+}
+
+onUnmounted(() => {
+	endDrag();
+});
 
 watch(() => select.list, (sel) => {
 
@@ -42,10 +70,11 @@ watch(() => select.list, (sel) => {
 
 </script>
 <template>
-	<div ref="elRef" class="absolute flex flex-col flex-wrap border border-gray-800
-	border-t-8 border-t-amber-900 rounded-lg pb-1 p-1 shadow-lg
-	 bg-earth-200 min-w-40 text-amber-950
-	 " @click.stop v-if="topPt">
+	<div ref="elRef" v-if="topPt" class="absolute flex flex-col flex-wrap border border-gray-800
+	border-t-10 border-t-amber-900 rounded-lg pb-1 p-1 shadow-lg
+	 bg-earth-200 min-w-40 text-amber-950"
+		 @mousedown.self="startDrag"
+		 @click.stop>
 
 		<input v-model="topPt.id" placeholder="id" @click.stop
 			   class="bg-amber-700/40 px-1 text-amber-950 placeholder-amber-950/70">
