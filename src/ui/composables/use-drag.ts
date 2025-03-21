@@ -10,7 +10,7 @@ export const useDrag = (elRef: Ref<HTMLElement | undefined>,
 
 	const onDown = (evt: MouseEvent) => {
 
-		if (!elRef.value) return;
+		dragging.value = false;
 
 		startPt.x = view.tx;
 		startPt.y = view.ty;
@@ -26,17 +26,20 @@ export const useDrag = (elRef: Ref<HTMLElement | undefined>,
 
 		dragging.value = true;
 
-		const tx = startPt.x + (evt.clientX - clickPt.x);
-		const ty = startPt.y + (evt.clientY - clickPt.y);
+		const tx = startPt.x + (evt.clientX - clickPt.x) / view.scale;
+		const ty = startPt.y + (evt.clientY - clickPt.y) / view.scale;
 
 		view.tx = tx;
 		view.ty = ty;
 
 	}
 
-	const onUp = (_: MouseEvent) => {
+	const onUp = (evt: MouseEvent) => {
+
+		window.removeEventListener('mousemove', onMove);
 
 		if (!dragging.value || !elRef.value) return;
+		dragging.value = false;
 
 		// swallow any click events.
 		window.addEventListener('click', (e) => {
@@ -44,11 +47,7 @@ export const useDrag = (elRef: Ref<HTMLElement | undefined>,
 			e.preventDefault();
 			e.stopPropagation();
 
-		}, { capture: true });
-
-		dragging.value = false;
-		window.removeEventListener('mousemove', onMove);
-
+		}, { capture: true, once: true });
 
 	}
 

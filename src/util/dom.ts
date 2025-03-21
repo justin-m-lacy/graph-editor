@@ -15,8 +15,9 @@ export const toLocalPos = <T extends { x?: number, y?: number }>(
 
 	const parentRect = elm.getBoundingClientRect();
 
-	pt.x = (evt.clientX - (parentRect.x + tx)) / scale;
-	pt.y = (evt.clientY - (parentRect.y + ty)) / scale;
+	/// (offset from canvas center)/(scale amount) + screen center pt
+	pt.x = -tx + (evt.clientX - (parentRect.x + parentRect.width / 2)) / scale;
+	pt.y = -ty + (evt.clientY - (parentRect.y + parentRect.height / 2)) / scale;
 
 	return pt;
 

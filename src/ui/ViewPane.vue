@@ -45,7 +45,7 @@ const makePoint = (e: MouseEvent) => {
 
 }
 
-const mouseMove = (evt: MouseEvent) => {
+const dragPt = (evt: MouseEvent) => {
 
 	if (!draggingPt) return;
 
@@ -121,7 +121,7 @@ useEventListener('mouseup', stopPtDrag);
 <template>
 	<div ref="container" class="relative w-full h-full overflow-hidden border border-black"
 		 :style="{ backgroundColor: optsStore.opts.bgColor ?? 'blue' }"
-		 @mousemove="mouseMove"
+		 @mousemove="dragPt"
 		 @wheel.prevent="onWheel"
 		 @click="makePoint">
 

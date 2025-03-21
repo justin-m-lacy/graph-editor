@@ -36,7 +36,7 @@ const { width, height } = useElementSize(svgRef);
 </script>
 <template>
 	<svg ref="svgRef" class="absolute w-full h-full"
-		 :viewBox="`${-(0.5 * width / scale) - tx / scale} ${-(0.5 * height) / scale - ty / scale} ${width / scale} ${height / scale}`">
+		 :viewBox="`${-(0.5 * width / scale) - tx} ${-(0.5 * height) / scale - ty} ${width / scale} ${height / scale}`">
 
 		<SvgCluster v-for="con of clusters.map.values()" :key="con.uid"
 					:con="con"
