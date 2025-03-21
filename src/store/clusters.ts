@@ -132,6 +132,17 @@ export const useClusters = defineStore('clusters', () => {
 	}
 
 	/**
+	 * Check if cluster id unique.
+	 * @param id 
+	 */
+	const checkId = (it: TCluster, id: string) => {
+		for (const c of map.values()) {
+			if (c != it && c.id === id) return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Link all points in cluster.
 	 * @param ids 
 	 */
@@ -241,7 +252,8 @@ export const useClusters = defineStore('clusters', () => {
 		unlinkPoints,
 		select,
 		selected,
-		deselect
+		deselect,
+		checkId
 	}
 
 

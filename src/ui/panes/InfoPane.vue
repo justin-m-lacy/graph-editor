@@ -6,7 +6,7 @@ import EditId from '@/ui/items/EditId.vue';
 import { TCluster, TPoint } from '../../types/geom';
 
 const clusters = useClusters();
-const pointStore = usePoints();
+const points = usePoints();
 const select = useSelect();
 
 const curCluster = computed(() => {
@@ -23,7 +23,7 @@ const curStars = computed(() => {
 
 	for (let i = 0; i < starIds.length; i++) {
 
-		const s = pointStore.get(starIds[i]);
+		const s = points.get(starIds[i]);
 		if (s) stars.push(s);
 	}
 
@@ -78,14 +78,14 @@ watch(() => clusters.selected, (sel) => {
 		border-t-2 border-b border-black">
 
 			<div class="flex items-center justify-between font-bold header py-1">
-				<EditId :t="curCluster" />
+				<EditId :it="curCluster" :id-check="clusters.checkId" />
 				<button type="button" @click="clusters.deselect">[X]</button>
 			</div>
 
 
 			<div class="subheader flex gap-x-1">
 				<span>id: </span>
-				<input v-model="curCluster.id" placeholder="id" class="px-1 bg-transparent">
+				<EditId :it="curCluster" :id-check="clusters.checkId" />
 			</div>
 
 			<div class="flex items-center text-sm pl-1 h-5 font-semibold">
@@ -96,13 +96,12 @@ watch(() => clusters.selected, (sel) => {
 
 
 
-			<div class="text-sm subheader">Stars</div>
-			<div v-for="s in curStars" class="flex justify-between pr-1 border-b border-black/40">
-				<EditId :key="s.id" :t="s"
+			<div class="text-sm subheader">Cluster Stars</div>
+			<div v-for="s in curStars" :key="s.uid" class="flex justify-between pr-1 border-b border-black/40">
+				<EditId :it="s" :id-check="points.checkId"
 						:class="starIdClass(s)"
-						@click="addConPt($event, s)">
-					{{ s.id }}
-				</EditId>
+						@click="addConPt($event, s)" />
+
 				<button type="button" class="text-xs" @click="clusters.removePt(curCluster, s.uid)">[x]</button>
 			</div>
 
@@ -113,11 +112,13 @@ watch(() => clusters.selected, (sel) => {
 
 		<div class="flex flex-col">
 			<div class="header">Clusters</div>
-			<div v-for="[_, con] in clusters.map" class="py-1 border-b border-black/40"
-				 :class="con.uid == curCluster?.uid ? 'font-bold' : ''">
-				<input type="text" class="px-2 w-full bg-transparent" :key="con.uid"
-					   @click="setCluster(con)"
-					   v-model="con.id">
+			<div v-for="[_, con] in clusters.map" :key="con.uid"
+				 class="py-1 border-b border-black/40"
+				 :class="con.uid == curCluster?.uid ? 'font-bold' : ''"
+				 @click="setCluster(con)">
+
+				<EditId :it="con" :id-check="clusters.checkId" />
+
 			</div>
 		</div>
 

@@ -21,6 +21,9 @@
     margin: 0; 
   }
 
+}
+
+@layer components {
   input[type=radio] {
     @apply bg-amber-700;
     appearance: none;
@@ -57,7 +60,6 @@
     outline-width: 0;
     outline-color: transparent;
   }
-
 }
 
 
@@ -85,11 +87,6 @@
   --text-lg: 1.125rem;
   --text-xl: 1.25rem;
 
-}
-
-input[type=text], select {
-  @apply outline-none
-    
 }
 
 body *, *::before, *::after{

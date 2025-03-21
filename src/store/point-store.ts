@@ -56,13 +56,25 @@ export const usePoints = defineStore('points', () => {
 
 	}
 
+	/**
+	 * Check if point id is unique.
+	 * @param id 
+	 */
+	const checkId = (pt: TPoint, id: string) => {
+		for (const c of points.values()) {
+			if (c != pt && c.id === id) return false;
+		}
+		return true;
+	}
+
 	return {
 
 		create,
 		get,
 		get map() { return points; },
 		deletePt,
-		setPoints
+		setPoints,
+		checkId
 
 	}
 

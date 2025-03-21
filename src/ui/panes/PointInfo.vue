@@ -4,6 +4,7 @@ import { usePoints } from '@/store/point-store';
 import { useSelect } from '@/store/select-store';
 import { useViewStore } from '@/store/view-store';
 import { TPoint } from '@/types/geom';
+import EditId from '@/ui/items/EditId.vue';
 import { positionElm, setElmPos } from "@/util/dom";
 import { round } from '../../util/dom';
 
@@ -86,8 +87,8 @@ watch(() => select.pts, (sel) => {
 		 @mousedown.self="startDrag"
 		 @click.stop>
 
-		<input v-model="topPt.id" placeholder="id" @click.stop
-			   class="bg-amber-700/40 px-1 text-amber-950 placeholder-amber-950/70">
+		<EditId :it="topPt" :id-check="points.checkId" placeholder="id" @click.stop
+				class="bg-amber-700/40 px-1 text-amber-950 placeholder-amber-950/70" />
 
 		<div class="flex justify-between px-1">
 			<div class="flex items-center font-semibold text-sm">{{ round(topPt.x) }}, {{ round(topPt.y) }}</div>
