@@ -4,7 +4,7 @@ export const useDrag = (elRef: Ref<HTMLElement | undefined>,
 	view: { tx: number, ty: number, scale: number }) => {
 
 	const startPt = { x: 0, y: 0 };
-	const clickOffset = { x: 0, y: 0 };
+	const clickPt = { x: 0, y: 0 };
 
 	let dragging = shallowRef(false);
 
@@ -15,8 +15,8 @@ export const useDrag = (elRef: Ref<HTMLElement | undefined>,
 		startPt.x = view.tx;
 		startPt.y = view.ty;
 
-		clickOffset.x = evt.offsetX;
-		clickOffset.y = evt.offsetY;
+		clickPt.x = evt.clientX;
+		clickPt.y = evt.clientY;
 
 		window.addEventListener('mousemove', onMove);
 
@@ -26,8 +26,8 @@ export const useDrag = (elRef: Ref<HTMLElement | undefined>,
 
 		dragging.value = true;
 
-		const tx = evt.clientX + clickOffset.x - startPt.x;
-		const ty = evt.clientY + clickOffset.y - startPt.y;
+		const tx = startPt.x + (evt.clientX - clickPt.x);
+		const ty = startPt.y + (evt.clientY - clickPt.y);
 
 		view.tx = tx;
 		view.ty = ty;

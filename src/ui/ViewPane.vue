@@ -112,13 +112,6 @@ const stopPtDrag = () => {
 }
 
 onMounted(() => {
-
-	const w = container.value?.clientWidth ?? 0;
-	const h = container.value?.clientHeight ?? 0;
-
-	// center. initial position
-	view.setPos(w / 2, h / 2);
-
 });
 
 useEventListener('keydown', onKeyDown);
