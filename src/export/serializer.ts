@@ -1,11 +1,8 @@
 import { parseClusters, parsePoints } from "@/export/decode";
 import { encodeClusters, encodePoints } from "@/export/encode";
-import type { PointData, TCluster, TPoint } from "@/types/geom";
+import type { TCluster, TPoint } from "@/types/geom";
+import { ResetIds } from "@/util/id";
 import type { Serializer } from "@vueuse/core";
-
-type SaveData = {
-	points: PointData[], clusters: TCluster[]
-};
 
 export type AppData = {
 
@@ -18,6 +15,8 @@ export function PointSerializer(): Serializer<AppData> {
 	return {
 
 		read(str: string): AppData {
+
+			ResetIds();
 
 			const raw = JSON.parse(str);
 			const points = parsePoints(raw.points);
