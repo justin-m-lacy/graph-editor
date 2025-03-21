@@ -5,7 +5,7 @@ import { useSelect } from '@/store/select-store';
 import { useViewStore } from '@/store/view-store';
 import { TPoint } from '@/types/geom';
 import { useEventListener } from '@vueuse/core';
-import { useDrag } from './composables/use-drag';
+import { useViewDrag } from './composables/view-drag';
 import SvgView from './items/SvgView.vue';
 
 const points = usePoints();
@@ -19,7 +19,7 @@ let groupDrag = false;
 let prevPt = { x: 0, y: 0 };
 
 const container = ref<HTMLElement>();
-useDrag(container, view);
+useViewDrag(container, view);
 
 const onWheel = (e: WheelEvent) => {
 

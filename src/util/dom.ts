@@ -13,11 +13,11 @@ export const toLocalPos = <T extends { x?: number, y?: number }>(
 	evt: MouseEvent | DragEvent, elm: HTMLElement, pt: T,
 	{ scale = 1, tx = 0, ty = 0 }: { scale: number, tx: number, ty: number }) => {
 
-	const parentRect = elm.getBoundingClientRect();
+	const rect = elm.getBoundingClientRect();
 
 	/// (offset from canvas center)/(scale amount) + screen center pt
-	pt.x = -tx + (evt.clientX - (parentRect.x + parentRect.width / 2)) / scale;
-	pt.y = -ty + (evt.clientY - (parentRect.y + parentRect.height / 2)) / scale;
+	pt.x = -tx + (evt.clientX - (rect.x + rect.width / 2)) / scale;
+	pt.y = -ty + (evt.clientY - (rect.y + rect.height / 2)) / scale;
 
 	return pt;
 

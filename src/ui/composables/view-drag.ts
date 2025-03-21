@@ -1,6 +1,6 @@
 import { useEventListener } from "@vueuse/core";
 
-export const useDrag = (elRef: Ref<HTMLElement | undefined>,
+export const useViewDrag = (elRef: Ref<HTMLElement | undefined>,
 	view: { tx: number, ty: number, scale: number }) => {
 
 	const startPt = { x: 0, y: 0 };
@@ -57,10 +57,5 @@ export const useDrag = (elRef: Ref<HTMLElement | undefined>,
 
 	useEventListener(elRef, 'mousedown', onDown);
 	useEventListener('mouseup', onUp);
-
-	return {
-		dragging
-	}
-
 
 }

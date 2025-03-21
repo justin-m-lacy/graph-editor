@@ -66,11 +66,17 @@ watch(() => select.pts, (sel) => {
 		topPt.value = sel[0];
 
 		if (!manualDrag) {
+
 			nextTick(() => {
-				if (elRef.value) positionElm(elRef.value, view.tx + view.scale * topPt.value!.x,
-					view.ty + view.scale * topPt.value!.y
-				)
+				if (!elRef.value) return;
+
+				const px = window.visualViewport!.width / 2 + (topPt.value!.x + view.tx) * view.scale;
+				const py = window.visualViewport!.height / 2 + (topPt.value!.y + view.ty) * view.scale;
+				positionElm(elRef.value, px, py);
+
+
 			});
+
 		}
 
 	} else {

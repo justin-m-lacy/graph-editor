@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { useClusters } from '@/store/clusters';
+import { useDataStore } from '@/store/data-store';
 import { usePoints } from '@/store/point-store';
 import { useSelect } from '@/store/select-store';
 import EditId from '@/ui/items/EditId.vue';
 import { TCluster, TPoint } from '../../types/geom';
+import ConfirmBtn from '../controls/ConfirmBtn.vue';
 
 const clusters = useClusters();
 const points = usePoints();
 const select = useSelect();
+
+const dataStore = useDataStore();
 
 const curCluster = computed(() => {
 	return clusters.selected
@@ -71,6 +75,7 @@ watch(() => clusters.selected, (sel) => {
 	<div class="flex flex-col  bg-earth-200 min-w-52 w-52 transition-all
 		border-r border-black select-none">
 
+		<ConfirmBtn @confirm="dataStore.reset()">🗑 Delete All</ConfirmBtn>
 		<button type="button" class="py-1 font-bold bg-blue-500/75"
 				@click.stop="clusters.create()">+ New Cluster</button>
 
