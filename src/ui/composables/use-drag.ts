@@ -4,19 +4,19 @@ export const useDrag = (elRef: Ref<HTMLElement | undefined>,
 	view: { tx: number, ty: number, scale: number }) => {
 
 	const startPt = { x: 0, y: 0 };
+	const clickOffset = { x: 0, y: 0 };
 
-	let blockDrag = false;
+	let dragging = shallowRef(false);
 
 	const onDown = (evt: MouseEvent) => {
 
-		if (blockDrag) return;
-
 		if (!elRef.value) return;
-
-		const rect = elRef.value.getBoundingClientRect();
 
 		startPt.x = view.tx;
 		startPt.y = view.ty;
+
+		clickOffset.x = evt.offsetX;
+		clickOffset.y = evt.offsetY;
 
 		window.addEventListener('mousemove', onMove);
 
@@ -24,23 +24,29 @@ export const useDrag = (elRef: Ref<HTMLElement | undefined>,
 
 	const onMove = (evt: MouseEvent) => {
 
-		//if (!elRef.value) return;
+		dragging.value = true;
 
-		const tx = evt.clientX - startPt.x;
-		const ty = evt.clientY - startPt.y;
+		const tx = evt.clientX + clickOffset.x - startPt.x;
+		const ty = evt.clientY + clickOffset.y - startPt.y;
 
 		view.tx = tx;
 		view.ty = ty;
 
-		console.log(`set tx: ${tx}`);
-
 	}
 
-	const onUp = (evt: MouseEvent) => {
+	const onUp = (_: MouseEvent) => {
 
-		if (!elRef.value) return;
+		if (!dragging.value || !elRef.value) return;
 
-		const rect = elRef.value.getBoundingClientRect();
+		// swallow any click events.
+		window.addEventListener('click', (e) => {
+
+			e.preventDefault();
+			e.stopPropagation();
+
+		}, { capture: true });
+
+		dragging.value = false;
 		window.removeEventListener('mousemove', onMove);
 
 
@@ -51,10 +57,10 @@ export const useDrag = (elRef: Ref<HTMLElement | undefined>,
 	});
 
 	useEventListener(elRef, 'mousedown', onDown);
-	useEventListener(elRef, 'mouseup', onUp);
+	useEventListener('mouseup', onUp);
 
 	return {
-		set blockDrag(v: boolean) { blockDrag = v }
+		dragging
 	}
 
 

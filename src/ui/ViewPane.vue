@@ -19,8 +19,6 @@ let groupDrag = false;
 let prevPt = { x: 0, y: 0 };
 
 const container = ref<HTMLElement>();
-
-
 useDrag(container, view);
 
 const onWheel = (e: WheelEvent) => {
@@ -93,6 +91,8 @@ function onKeyDown(evt: KeyboardEvent) {
 
 const selPoint = (evt: MouseEvent, p: TPoint) => {
 
+	evt.stopPropagation();
+
 	if (evt.shiftKey) {
 
 		select.add(p);
@@ -132,7 +132,7 @@ useEventListener('mouseup', stopPtDrag);
 		 @wheel.prevent="onWheel"
 		 @click="makePoint">
 
-		<SvgView @clickPoint="selPoint"
+		<SvgView @clickPoint="selPoint" id="SVGV?IEW"
 				 :tx="view.tx"
 				 :ty="view.ty"
 				 :scale="view.scale" />
