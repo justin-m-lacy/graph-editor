@@ -4,7 +4,7 @@ import { usePoints } from '@/store/point-store';
 import { useSelect } from '@/store/select-store';
 import { useViewStore } from '@/store/view-store';
 import { TPoint } from '@/types/geom';
-import { positionElm } from "@/util/dom";
+import { positionElm, setElmPos } from "@/util/dom";
 import { round } from '../../util/dom';
 
 const clusters = useClusters();
@@ -15,6 +15,10 @@ const view = useViewStore();
 const elRef = shallowRef<HTMLElement>();
 const topPt = shallowRef<TPoint | null>(null);
 
+const dragOffset = { x: 0, y: 0 };
+
+let manualDrag = false;
+
 const unlink = () => {
 	clusters.unlinkPoints(select.pts);
 }
@@ -24,15 +28,20 @@ const onDrag = (evt: MouseEvent) => {
 	const elm = elRef.value;
 	if (!elm) return;
 
+	manualDrag = true;
 	const parent = elm.parentElement!;
 
-	const tx = evt.clientX - parent.offsetLeft;
-	const ty = evt.clientY - parent.offsetTop;
-	positionElm(elm, tx, ty);
+	const tx = evt.clientX - dragOffset.x - parent.offsetLeft;
+	const ty = evt.clientY - dragOffset.y - parent.offsetTop;
+	setElmPos(elm, tx, ty);
 
 }
 
 function startDrag(evt: MouseEvent) {
+
+	dragOffset.x = evt.offsetX;
+	dragOffset.y = evt.offsetY;
+
 	window.addEventListener('mousemove', onDrag);
 	window.addEventListener('mouseup', endDrag);
 }
@@ -50,12 +59,18 @@ watch(() => select.pts, (sel) => {
 
 	if (sel && sel.length > 0) {
 
-		const pt = topPt.value = select.top();
-		nextTick(() => {
-			if (pt) positionElm(elRef.value,
-				view.tx + view.scale * pt.x,
-				view.ty + view.scale * pt.y)
-		});
+		if (sel[0].uid != topPt.value?.uid) {
+			manualDrag = false;
+		}
+		topPt.value = sel[0];
+
+		if (!manualDrag) {
+			nextTick(() => {
+				if (elRef.value) positionElm(elRef.value, view.tx + view.scale * topPt.value!.x,
+					view.ty + view.scale * topPt.value!.y
+				)
+			});
+		}
 
 	} else {
 		topPt.value = null;

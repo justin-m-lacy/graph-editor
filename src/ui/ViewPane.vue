@@ -5,55 +5,59 @@ import { useSelect } from '@/store/select-store';
 import { useViewStore } from '@/store/view-store';
 import { TPoint } from '@/types/geom';
 import { useEventListener } from '@vueuse/core';
+import { useDrag } from './composables/use-drag';
 import SvgView from './items/SvgView.vue';
 
-const pointStore = usePoints();
-const viewStore = useViewStore();
+const points = usePoints();
+const view = useViewStore();
 const optsStore = useOptions();
-const selectStore = useSelect();
+const select = useSelect();
 
-let dragging = false;
+let draggingPt = false;
 let groupDrag = false;
 /// previous point in drag operation.
 let prevPt = { x: 0, y: 0 };
 
 const container = ref<HTMLElement>();
 
+
+useDrag(container, view);
+
 const onWheel = (e: WheelEvent) => {
 
-	let s = e.deltaY / 1000 + viewStore.scale;
+	let s = e.deltaY / 1000 + view.scale;
 	s = Math.max(0.5, Math.min(1.5, s));
 
-	viewStore.setScale(s);
+	view.setScale(s);
 
 }
 
 const makePoint = (e: MouseEvent) => {
 
-	const coord = viewStore.toLocal(e, container.value!, { x: 0, y: 0 });
-	const p = pointStore.create(
+	const coord = view.toLocal(e, container.value!, { x: 0, y: 0 });
+	const p = points.create(
 		coord
 	);
 
 	if (e.shiftKey) {
-		selectStore.add(p);
+		select.add(p);
 	} else {
-		selectStore.select(p);
+		select.select(p);
 	}
 
 }
 
 const mouseMove = (evt: MouseEvent) => {
 
-	if (!dragging) return;
+	if (!draggingPt) return;
 
-	const drags = selectStore.pts;
+	const drags = select.pts;
 	if (drags.length <= 0) return;
 
 	if (groupDrag) {
 
 		const nextPt = { x: 0, y: 0 };
-		viewStore.toLocal(evt, container.value!, nextPt,);
+		view.toLocal(evt, container.value!, nextPt,);
 
 		const dx = nextPt.x - prevPt.x;
 		const dy = nextPt.y - prevPt.y;
@@ -67,30 +71,44 @@ const mouseMove = (evt: MouseEvent) => {
 
 	} else {
 
-		viewStore.toLocal(evt, container.value!, drags[0]);
+		view.toLocal(evt, container.value!, drags[0]);
 	}
 
 
+}
+
+function onKeyDown(evt: KeyboardEvent) {
+
+	if (evt.key == "Delete") {
+
+		const pts = select.pts.concat();
+		select.clear();
+
+		for (let i = pts.length - 1; i >= 0; i--) {
+			points.deletePt(pts[i].uid);
+		}
+
+	}
 }
 
 const selPoint = (evt: MouseEvent, p: TPoint) => {
 
 	if (evt.shiftKey) {
 
-		selectStore.add(p);
+		select.add(p);
 		groupDrag = true;
 
 	} else {
-		selectStore.select(p);
+		select.select(p);
 		groupDrag = false;
 	}
-	dragging = true;
-	viewStore.toLocal(evt, container.value!, prevPt,);
+	draggingPt = true;
+	view.toLocal(evt, container.value!, prevPt,);
 
 }
 
-const stopDrag = () => {
-	dragging = false;
+const stopPtDrag = () => {
+	draggingPt = false;
 }
 
 onMounted(() => {
@@ -99,11 +117,12 @@ onMounted(() => {
 	const h = container.value?.clientHeight ?? 0;
 
 	// center. initial position
-	viewStore.setPos(w / 2, h / 2);
+	view.setPos(w / 2, h / 2);
 
 });
 
-useEventListener('mouseup', stopDrag);
+useEventListener('keydown', onKeyDown);
+useEventListener('mouseup', stopPtDrag);
 
 </script>
 <template>
@@ -114,8 +133,8 @@ useEventListener('mouseup', stopDrag);
 		 @click="makePoint">
 
 		<SvgView @clickPoint="selPoint"
-				 :tx="viewStore.tx"
-				 :ty="viewStore.ty"
-				 :scale="viewStore.scale" />
+				 :tx="view.tx"
+				 :ty="view.ty"
+				 :scale="view.scale" />
 	</div>
 </template>
