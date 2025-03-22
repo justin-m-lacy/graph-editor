@@ -22,6 +22,13 @@ export const useSelect = defineStore('selection', () => {
 		events.emit('select-pt', p.uid);
 	}
 
+	const selectPts = (arr: TPoint[]) => {
+
+		pts.value.length = 0;
+		pts.value.push(...arr);
+
+	}
+
 	/**
 	 * Add to list of selected points.
 	 * @param p 
@@ -71,6 +78,7 @@ export const useSelect = defineStore('selection', () => {
 		remove,
 		clear,
 		select,
+		selectPts,
 		has
 	}
 

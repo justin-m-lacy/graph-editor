@@ -17,6 +17,11 @@ const curCluster = computed(() => {
 	return clusters.selected
 });
 
+const selectIn = (con: TCluster) => {
+	const stars = con.stars.map(s => points.get(s)).filter(s => s != null);
+	select.selectPts(stars);
+}
+
 const curStars = computed(() => {
 
 	const sel = curCluster.value;
@@ -101,7 +106,10 @@ watch(() => clusters.selected, (sel) => {
 
 
 
-			<div class="text-sm subheader">Cluster Stars</div>
+			<div class="text-sm subheader flex justify-between">
+				Cluster Stars
+				<button type="button" class="px-1 bg-indigo-500/50" @click="selectIn(curCluster)">+Select All</button>
+			</div>
 			<div v-for="s in curStars" :key="s.uid" class="flex justify-between pr-1 border-b border-black/40">
 				<EditId :it="s" :id-check="points.checkId"
 						:class="starIdClass(s)"
