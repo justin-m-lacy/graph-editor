@@ -7,6 +7,10 @@ const props = defineProps<{
 const localId = shallowRef<string>(props.it.id);
 const error = shallowRef<boolean>(false);
 
+watch(()=>props.it, (item)=>{
+	localId.value=item.id;
+})
+
 const onInput = (v: Event) => {
 
 	const targ = v.target as HTMLInputElement;

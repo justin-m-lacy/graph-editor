@@ -1,6 +1,6 @@
 
-const PadX = 12;
-const PadY = 12;
+const PadX = 32;
+const PadY = 32;
 
 /**
  * Convert event point to local point view.

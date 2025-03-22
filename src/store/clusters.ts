@@ -111,7 +111,10 @@ export const useClusters = defineStore('clusters', () => {
 
 	}
 
-	function unlinkPts(links: Array<[TPoint, TPoint]>, p1: TPoint, p2: TPoint) {
+	function unlinkPts(con: TCluster, p1: TPoint, p2: TPoint) {
+
+		const links = con.links;
+		const newLinks = <[TPoint, TPoint][]>[];
 
 		for (let i = links.length - 1; i >= 0; i--) {
 
@@ -119,15 +122,12 @@ export const useClusters = defineStore('clusters', () => {
 			const link = links[i];
 			if ((link[0].uid == p1.uid && link[1].uid == p2.uid) ||
 				(link[0].uid == p2.uid && link[1].uid == p1.uid)) {
-
-				// remove link.
-				link.splice(i, 1);
-				return;
-
-			}
+				continue;
+			} else newLinks.push(links[i]);
 
 		}
 
+		con.links = newLinks;
 
 	}
 
@@ -199,7 +199,7 @@ export const useClusters = defineStore('clusters', () => {
 		for (let i = pts.length - 1; i >= 1; i--) {
 
 			for (let j = i - 1; j >= 0; j--) {
-				unlinkPts(cur.links, pts[i], pts[j]);
+				unlinkPts(cur, pts[i], pts[j]);
 			}
 
 		}

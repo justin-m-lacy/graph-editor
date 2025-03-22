@@ -108,11 +108,13 @@ watch(() => select.pts, (sel) => {
 
 		<div v-if="select.size > 1">( {{ select.size - 1 }} more...)</div>
 		<button type="button" class="bg-rose-900/50 border border-black select-none font-semibold"
-				title="Link in current cluster"
-				@click="clusters.linkAll(select.pts)">Link ALL</button>
-		<button type="button" class="bg-rose-900/50 border border-black select-none font-semibold"
 				title="Link points in a line"
 				@click="clusters.linkLine(select.pts)">Link LINE</button>
+
+		<button type="button" class="bg-rose-900/50 border border-black select-none font-semibold"
+				title="Link in current cluster"
+				@click="clusters.linkAll(select.pts)">Link ALL</button>
+
 		<button type="button" class="bg-rose-900/50 border border-black select-none font-semibold"
 				title="Unlink points in cluster"
 				@click="unlink">Unlink</button>

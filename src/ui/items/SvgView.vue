@@ -8,7 +8,7 @@ import { useElementSize } from '@vueuse/core';
 import SvgCluster from './SvgCluster.vue';
 import SvgPoint from './SvgPoint.vue';
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
 	tx?: number,
 	ty?: number,
 	scale?: number
@@ -28,9 +28,7 @@ const opts = useOptions();
 const selected = useSelect();
 const points = usePoints();
 const clusters = useClusters();
-const conSelected = (con: TCluster) => {
-	return clusters.selected?.uid == con.uid;
-}
+const isSelected = (con: TCluster) => clusters.selected?.uid == con.uid;
 
 const { width, height } = useElementSize(svgRef);
 </script>
@@ -41,7 +39,7 @@ const { width, height } = useElementSize(svgRef);
 		<SvgCluster v-for="con of clusters.map.values()" :key="con.uid"
 					:con="con"
 					stroke-width="1.6"
-					:stroke="conSelected(con) ? opts.lineSelectColor : con.color ?? opts.lineColor" />
+					:stroke="isSelected(con) ? opts.lineSelectColor : con.color ?? opts.lineColor" />
 		<SvgPoint v-for="[_, p] in points.map" :key="p.uid"
 				  :pt="p" :color="opts.ptColor!"
 				  :radius="opts.ptRadius ?? 3"
