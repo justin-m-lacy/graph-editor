@@ -95,7 +95,7 @@ const selPoint = (evt: MouseEvent, p: TPoint) => {
 
 	if (evt.shiftKey) {
 
-		select.add(p);
+		select.toggle(p);
 		groupDrag = true;
 
 	} else {

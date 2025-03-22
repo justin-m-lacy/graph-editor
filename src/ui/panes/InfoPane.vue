@@ -40,13 +40,12 @@ const curStars = computed(() => {
 
 });
 
-function addConPt(evt: MouseEvent, p: TPoint) {
-
-	const con = clusters.selected;
-	if (!con) return;
+function selConPt(evt: MouseEvent, p: TPoint) {
 
 	if (evt.shiftKey) {
-		select.add(p);
+
+		select.toggle(p);
+
 	} else {
 		select.select(p);
 	}
@@ -113,7 +112,7 @@ watch(() => clusters.selected, (sel) => {
 			<div v-for="s in curStars" :key="s.uid" class="flex justify-between pr-1 border-b border-black/40">
 				<EditId :it="s" :id-check="points.checkId"
 						:class="starIdClass(s)"
-						@click="addConPt($event, s)" />
+						@click="selConPt($event, s)" />
 
 				<button type="button" class="text-xs" @click="clusters.removePt(curCluster, s.uid)">[x]</button>
 			</div>

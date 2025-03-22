@@ -29,6 +29,15 @@ export const useSelect = defineStore('selection', () => {
 
 	}
 
+	const toggle = (p: TPoint) => {
+
+		if (pts.value.some(v => v.uid == p.uid)) {
+			remove(p.uid);
+		} else {
+			pts.value.unshift(p);
+		}
+	}
+
 	/**
 	 * Add to list of selected points.
 	 * @param p 
@@ -76,6 +85,7 @@ export const useSelect = defineStore('selection', () => {
 		pts,
 		add,
 		remove,
+		toggle,
 		clear,
 		select,
 		selectPts,
