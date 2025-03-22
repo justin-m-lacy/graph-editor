@@ -36,15 +36,13 @@ const { width, height } = useElementSize(svgRef);
 	<svg ref="svgRef" class="absolute w-full h-full"
 		 :viewBox="`${-(0.5 * width / scale) - tx} ${-(0.5 * height) / scale - ty} ${width / scale} ${height / scale}`">
 
-		<SvgCluster v-for="con of clusters.map.values()" :key="con.uid"
-					:con="con"
-					stroke-width="1.6"
-					:stroke="isSelected(con) ? opts.lineSelectColor : con.color ?? opts.lineColor" />
-		<SvgPoint v-for="[_, p] in points.map" :key="p.uid"
-				  :pt="p" :color="opts.ptColor!"
-				  :radius="opts.ptRadius ?? 3"
-				  :selected="selected.has(p.uid)"
-				  @click.stop
-				  @mousedown="emit('clickPoint', $event, p as TPoint)" />
+		<template v-for="con of clusters.map.values()" :key="con.uid">
+			<SvgCluster v-if="!opts.hideClusters || isSelected(con)"
+						:con="con"
+						stroke-width="1.6"
+						:stroke="isSelected(con) ? opts.lineSelectColor : con.color ?? opts.lineColor" />
+		</template>
+		<SvgPoint v-for="[_, p] in points.map" :key="p.uid" :pt="p" :color="opts.ptColor!" :radius="opts.ptRadius ?? 3"
+				  :selected="selected.has(p.uid)" @click.stop @mousedown="emit('clickPoint', $event, p as TPoint)" />
 	</svg>
 </template>

@@ -7,6 +7,7 @@ type TOpts = {
 	ptRadius?: number,
 	lineColor?: string,
 	lineSelectColor?: string;
+	hideClusters?: boolean;
 	blur?: boolean | number
 }
 
@@ -32,6 +33,7 @@ export const useOptions = defineStore('options', () => {
 	const ptColor = makeOpt(opts, 'ptColor', 'black');
 	const ptRadius = makeOpt(opts, 'ptRadius', 2);
 	const lineColor = makeOpt(opts, 'lineColor');
+	const hideClusters = makeOpt(opts, 'hideClusters');
 	const lineSelectColor = makeOpt(opts, 'lineSelectColor', '#ee0000');
 
 	return {
@@ -43,6 +45,7 @@ export const useOptions = defineStore('options', () => {
 		ptRadius,
 		lineColor,
 		lineSelectColor,
+		hideClusters,
 
 		setVal<K extends keyof TOpts>(s: K, v: TOpts[K]) {
 			opts.value[s] = v;

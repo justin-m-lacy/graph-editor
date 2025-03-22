@@ -19,6 +19,37 @@ export const useFileLink = (json: string, saveName: string) => {
 
 /**
  * 
+ * @param fileList Load json file as raw string.
+ * @returns 
+ */
+export const loadJsonStr = (fileList: FileList) => {
+
+	const file = fileList[0];
+	if (!file) return;
+
+	return new Promise<string>((res, rej) => {
+
+		const reader = new FileReader();
+		reader.onload = (e) => {
+
+			try {
+				res(e.target!.result as string);
+
+			} catch (err: any) {
+				console.error(err.message + '\n' + err.stack);
+			}
+
+		}
+		reader.onerror = (evt) => rej(evt);
+		reader.readAsText(file);
+
+	});
+
+}
+
+
+/**
+ * 
  * @param fileList Load json file and parse as type.
  * @returns 
  */

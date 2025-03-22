@@ -8,6 +8,9 @@ import { useEventListener } from '@vueuse/core';
 import { useViewDrag } from './composables/view-drag';
 import SvgView from './items/SvgView.vue';
 
+const MIN_SCALE = 0.25;
+const MAX_SCALE = 1.5;
+
 const points = usePoints();
 const view = useViewStore();
 const optsStore = useOptions();
@@ -24,7 +27,7 @@ useViewDrag(container, view);
 const onWheel = (e: WheelEvent) => {
 
 	let s = e.deltaY / 1000 + view.scale;
-	s = Math.max(0.5, Math.min(1.5, s));
+	s = Math.max(MIN_SCALE, Math.min(MAX_SCALE, s));
 
 	view.setScale(s);
 

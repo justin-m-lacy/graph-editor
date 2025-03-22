@@ -31,7 +31,7 @@ export const useSelect = defineStore('selection', () => {
 
 	const toggle = (p: TPoint) => {
 
-		if (pts.value.some(v => v.uid == p.uid)) {
+		if (pts.value[0]?.uid === p.uid) {
 			remove(p.uid);
 		} else {
 			pts.value.unshift(p);
