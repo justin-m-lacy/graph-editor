@@ -38,9 +38,8 @@ const fileSelect = async (event: Event) => {
 const loadFile = async (files: FileList) => {
 	try {
 		const fileData = await loadJsonStr(files);
-		if (fileData) {
-			useDataStore().setData(fileData);
-		}
+		useDataStore().setData(fileData!);
+
 	} catch (err) {
 		console.error(err);
 	}

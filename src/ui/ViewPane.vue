@@ -19,7 +19,7 @@ const select = useSelect();
 let draggingPt = false;
 let groupDrag = false;
 /// previous point in drag operation.
-let prevPt = { x: 0, y: 0 };
+const prevPt = { x: 0, y: 0 };
 
 const container = ref<HTMLElement>();
 useViewDrag(container, view);
@@ -34,6 +34,10 @@ const onWheel = (e: WheelEvent) => {
 }
 
 const makePoint = (e: MouseEvent) => {
+
+	if (draggingPt) {
+		return;
+	}
 
 	const coord = view.toLocal(e, container.value!, { x: 0, y: 0 });
 	const p = points.create(
@@ -56,9 +60,8 @@ const dragPt = (evt: MouseEvent) => {
 	if (drags.length <= 0) return;
 
 	if (groupDrag) {
-
 		const nextPt = { x: 0, y: 0 };
-		view.toLocal(evt, container.value!, nextPt,);
+		view.toLocal(evt, container.value!, nextPt);
 
 		const dx = nextPt.x - prevPt.x;
 		const dy = nextPt.y - prevPt.y;
@@ -106,12 +109,24 @@ const selPoint = (evt: MouseEvent, p: TPoint) => {
 		groupDrag = false;
 	}
 	draggingPt = true;
-	view.toLocal(evt, container.value!, prevPt,);
+	view.toLocal(evt, container.value!, prevPt);
 
 }
 
 const stopPtDrag = () => {
+
+	if (!draggingPt) return;
+
 	draggingPt = false;
+
+	// swallow any click events.
+	window.addEventListener('click', (e) => {
+
+		e.preventDefault();
+		e.stopPropagation();
+
+	}, { capture: true, once: true });
+
 }
 
 onMounted(() => {

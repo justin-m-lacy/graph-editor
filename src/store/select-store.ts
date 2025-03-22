@@ -33,7 +33,7 @@ export const useSelect = defineStore('selection', () => {
 
 		if (pts.value[0]?.uid === p.uid) {
 			remove(p.uid);
-		} else {
+		} else if (!has(p.uid)) {
 			pts.value.unshift(p);
 		}
 	}

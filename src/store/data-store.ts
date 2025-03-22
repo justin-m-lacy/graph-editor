@@ -41,6 +41,7 @@ export const useDataStore = defineStore('save', () => {
 				const values = serializer.read(v);
 				data.value.points = values.points;
 				data.value.clusters = values.clusters;
+				triggerRef(data);
 			} catch (err) {
 				console.error(`${err}`)
 			}
