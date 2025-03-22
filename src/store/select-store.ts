@@ -19,6 +19,7 @@ export const useSelect = defineStore('selection', () => {
 		pts.value.length = 0;
 		pts.value.push(p);
 
+		events.emit('select-pt', p.uid);
 	}
 
 	/**

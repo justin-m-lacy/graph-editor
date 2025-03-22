@@ -57,7 +57,6 @@ const update = () => {
 	const ctx = el.getContext('2d');
 	if (!ctx) return;
 
-	console.log(`size: ${el.width},${el.height}`);
 	ctx.clearRect(0, 0, el.width, el.height);
 
 	drawPoints(ctx);

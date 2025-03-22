@@ -11,7 +11,7 @@ export const useClusters = defineStore('clusters', () => {
 
 	const selUid = shallowRef<string | null>(null);
 
-	const selected = computed(() => selUid.value ? map.get(selUid.value) ?? null : null);
+	const selected = computed(() => selUid.value ? map.get(selUid.value) : undefined);
 
 	const deselect = () => selUid.value = null;
 
@@ -19,7 +19,24 @@ export const useClusters = defineStore('clusters', () => {
 		selUid.value = uid ?? null;
 	}
 
-	const addPoints = (pts: TPoint[], con: TCluster | null = selected.value,) => {
+	/**
+	 * If no cluster selected, select cluster with matching point id.
+	 * @param uid 
+	 */
+	const selectMatch = (uid: string) => {
+		console.log(`select matching...`);
+		if (selUid.value) return;
+
+		for (const con of map.values()) {
+			if (con.stars.some(s => s == uid)) {
+				selUid.value = con.uid;
+				return;
+			}
+		}
+
+	}
+
+	const addPoints = (pts: TPoint[], con: TCluster | undefined = selected.value,) => {
 
 		if (!con) con = create();
 
@@ -35,7 +52,7 @@ export const useClusters = defineStore('clusters', () => {
 		}
 	}
 
-	const removePoints = (pts: TPoint[], con: TCluster | null = selected.value,) => {
+	const removePoints = (pts: TPoint[], con: TCluster | undefined = selected.value,) => {
 
 		if (!con) con = create();
 
@@ -94,21 +111,7 @@ export const useClusters = defineStore('clusters', () => {
 	 * @param ptId 
 	 */
 	function unlinkPt(con: TCluster, ptId: string) {
-
-		const newLinks = <[TPoint, TPoint][]>[];
-
-		const links = con.links;
-		for (let i = links.length - 1; i >= 0; i--) {
-
-			// check link already existing.
-			const link = links[i];
-			if (link[0].uid != ptId && link[1].uid != ptId) {
-				newLinks.push(link);
-			}
-
-		}
-		con.links = newLinks;
-
+		con.links = con.links.filter(link => link[0].uid != ptId && link[1].uid != ptId);
 	}
 
 	function unlinkPts(con: TCluster, p1: TPoint, p2: TPoint) {
@@ -122,7 +125,6 @@ export const useClusters = defineStore('clusters', () => {
 			const link = links[i];
 			if ((link[0].uid == p1.uid && link[1].uid == p2.uid) ||
 				(link[0].uid == p2.uid && link[1].uid == p1.uid)) {
-				continue;
 			} else newLinks.push(links[i]);
 
 		}
@@ -238,6 +240,7 @@ export const useClusters = defineStore('clusters', () => {
 	}
 
 	events.on('delete-pt', onDeleteStar);
+	events.on('select-pt', selectMatch)
 
 	return {
 		addPt,
