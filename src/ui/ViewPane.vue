@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useClusters } from '@/store/clusters';
 import { useOptions } from '@/store/options-store';
 import { usePoints } from '@/store/point-store';
 import { useSelect } from '@/store/select-store';
@@ -12,6 +13,7 @@ const MIN_SCALE = 0.25;
 const MAX_SCALE = 1.5;
 
 const points = usePoints();
+const clusters = useClusters();
 const view = useViewStore();
 const optsStore = useOptions();
 const select = useSelect();
@@ -20,6 +22,7 @@ let draggingPt = false;
 let groupDrag = false;
 /// previous point in drag operation.
 const prevPt = { x: 0, y: 0 };
+
 
 const container = ref<HTMLElement>();
 useViewDrag(container, view);
@@ -113,6 +116,19 @@ const selPoint = (evt: MouseEvent, p: TPoint) => {
 
 }
 
+const selAllPoint = (evt: MouseEvent, p: TPoint) => {
+
+	if (clusters.selected?.stars.some(s => s == p.uid)) {
+		select.selectAllIn(clusters.selected);
+	} else {
+		selPoint(evt, p);
+		if (clusters.selected) {
+			select.selectAllIn(clusters.selected);
+		}
+	}
+
+}
+
 const stopPtDrag = () => {
 
 	if (!draggingPt) return;
@@ -143,7 +159,8 @@ useEventListener('mouseup', stopPtDrag);
 		 @wheel.prevent="onWheel"
 		 @click="makePoint">
 
-		<SvgView @clickPoint="selPoint" id="SVGV?IEW"
+		<SvgView @clickPoint="selPoint"
+				 @dblclick="selAllPoint"
 				 :tx="view.tx"
 				 :ty="view.ty"
 				 :scale="view.scale" />

@@ -13,13 +13,10 @@ const select = useSelect();
 
 const dataStore = useDataStore();
 
-const curCluster = computed(() => {
-	return clusters.selected
-});
+const curCluster = computed(() => clusters.selected);
 
 const selectIn = (con: TCluster) => {
-	const stars = con.stars.map(s => points.get(s)).filter(s => s != null);
-	select.selectPts(stars);
+	select.selectAllIn(con);
 }
 
 const curStars = computed(() => {

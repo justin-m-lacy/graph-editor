@@ -24,7 +24,6 @@ export const useClusters = defineStore('clusters', () => {
 	 * @param uid 
 	 */
 	const selectMatch = (uid: string) => {
-		console.log(`select matching...`);
 		if (selUid.value) return;
 
 		for (const con of map.values()) {

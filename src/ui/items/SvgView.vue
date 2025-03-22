@@ -19,6 +19,7 @@ withDefaults(defineProps<{
 });
 
 const emit = defineEmits<{
+	(e: 'dblclick', evt: MouseEvent, pt: TPoint): void;
 	(e: 'clickPoint', evt: MouseEvent, pt: TPoint): void
 }>();
 
@@ -43,6 +44,7 @@ const { width, height } = useElementSize(svgRef);
 						:stroke="isSelected(con) ? opts.lineSelectColor : con.color ?? opts.lineColor" />
 		</template>
 		<SvgPoint v-for="[_, p] in points.map" :key="p.uid" :pt="p" :color="opts.ptColor!" :radius="opts.ptRadius ?? 3"
-				  :selected="selected.has(p.uid)" @click.stop @mousedown="emit('clickPoint', $event, p as TPoint)" />
+				  :selected="selected.has(p.uid)" @click.stop @dblclick="emit('dblclick', $event, p)"
+				  @mousedown="emit('clickPoint', $event, p as TPoint)" />
 	</svg>
 </template>

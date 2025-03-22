@@ -1,6 +1,7 @@
 import { events } from "@/store/events";
+import { usePoints } from "@/store/point-store";
 import { defineStore } from "pinia";
-import { TPoint } from '../types/geom';
+import { TPoint, type TCluster } from '../types/geom';
 
 /**
  * select groups of stars to define links.
@@ -20,6 +21,12 @@ export const useSelect = defineStore('selection', () => {
 		pts.value.push(p);
 
 		events.emit('select-pt', p.uid);
+	}
+
+	const selectAllIn = (con: TCluster) => {
+
+		const points = usePoints();
+		selectPts(con.stars.map(s => points.get(s)).filter(s => s != null));
 	}
 
 	const selectPts = (arr: TPoint[]) => {
@@ -89,6 +96,7 @@ export const useSelect = defineStore('selection', () => {
 		clear,
 		select,
 		selectPts,
+		selectAllIn,
 		has
 	}
 
