@@ -83,6 +83,10 @@
 
 }
 
+html, body {
+  height: 100vh;
+  overflow:hidden;
+}
 body *, *::before, *::after{
 	box-sizing: border-box;
   -ms-overflow-style: none;

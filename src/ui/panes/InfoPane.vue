@@ -73,14 +73,15 @@ watch(() => clusters.selected, (sel) => {
 
 </script>
 <template>
-	<div class="flex flex-col  bg-earth-200 min-w-52 w-52 transition-all
+	<div class="flex flex-col grow bg-earth-200 min-w-52 w-52
+		overflow-y-scroll min-h-full transition-all 
 		border-r border-black select-none">
 
 		<ConfirmBtn @confirm="dataStore.reset()">🗑 Delete All Points</ConfirmBtn>
 		<button type="button" class="py-1 font-bold bg-blue-500/75"
 				@click.stop="clusters.create()">+ New Cluster</button>
 
-		<div v-if="curCluster" class="flex flex-col items-stretch transition-all
+		<div v-if="curCluster" class="flex flex-col grow items-stretch transition-all
 		border-t-2 border-b border-black">
 
 			<div class="flex items-center justify-between font-bold header py-1">
@@ -119,7 +120,7 @@ watch(() => clusters.selected, (sel) => {
 		</div>
 
 
-		<div class="flex flex-col">
+		<div class="flex flex-col grow">
 			<div class="header">Clusters</div>
 			<div v-for="[_, con] in clusters.map" :key="con.uid"
 				 class="py-1 border-b border-black/40"
@@ -131,7 +132,7 @@ watch(() => clusters.selected, (sel) => {
 			</div>
 		</div>
 
-		<div class="flex flex-col" v-if="select.pts.length > 0">
+		<div class="flex flex-col grow" v-if="select.pts.length > 0">
 			<div class="subheader">Selected Points</div>
 			<div v-for="p in select.pts" :key="p.uid" class="px-1 py-1 border-b border-black/40">
 				{{ p.id }}

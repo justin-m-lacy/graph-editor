@@ -9,10 +9,14 @@ import ViewPane from './ViewPane.vue';
 
 <template>
 
-  <div class="w-full h-full min-h-full">
+  <div class="flex flex-col h-full w-full min-h-full overflow-hidden">
     <Header></Header>
-    <div class="flex h-full w-full">
+    <div class="flex grow w-full h-full">
+
+
       <InfoPane class="z-10" />
+
+
       <PointInfo class="absolute z-100" />
       <ViewPane />
       <OptionsPane class="self-end z-10" />
