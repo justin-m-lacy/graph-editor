@@ -70,9 +70,9 @@ watch(() => select.pts, (sel) => {
 			nextTick(() => {
 				if (!elRef.value) return;
 
-
-				const px = elRef.value.parentElement!.clientWidth / 2 + (topPt.value!.x + view.tx) * view.scale;
-				const py = elRef.value.parentElement!.clientHeight / 2 + (topPt.value!.y + view.ty) * view.scale;
+				const rect = elRef.value.parentElement!.getBoundingClientRect()!;
+				const px = rect.width / 2 + (topPt.value!.x + view.tx) * view.scale;
+				const py = rect.height / 2 + (topPt.value!.y + view.ty) * view.scale;
 
 				positionElm(elRef.value, px, py);
 

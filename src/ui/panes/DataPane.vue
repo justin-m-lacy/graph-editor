@@ -4,7 +4,7 @@ import { round } from '@/util/dom';
 const props = defineProps<{
 	obj: object & any
 }>();
-console.log(`showin data`);
+
 const values = computed(() => {
 
 	const arr: Array<[string, any]> = [];

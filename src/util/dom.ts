@@ -91,7 +91,7 @@ export const positionElm = (el: HTMLElement | undefined, x: number, y: number, r
 	}
 
 	if (y < PadY) y = PadY;
-	else if (rect.bottom > height - PadY) {
+	else if (y + rect.height > height - PadY) {
 		y = height - rect.height - PadY;
 	}
 

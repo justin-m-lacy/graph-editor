@@ -9,6 +9,11 @@ import ViewPane from './ViewPane.vue';
 
 const select = useSelect();
 
+watch(() => select.top, (newtop) => {
+
+  console.log(`top changed: ${newtop?.uid}`);
+});
+
 </script>
 
 <template>
