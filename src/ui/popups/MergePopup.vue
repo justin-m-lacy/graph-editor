@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { decodeAll } from '@/export/decode';
 import { loadJsonFile } from '@/export/files';
+import { useDataStore } from '@/store/data-store';
 
 
 const fileInputEl = ref<HTMLInputElement>();
 const fileName = ref<string>();
+
+const dataStore = useDataStore();
 
 // name of json section for points.
 const pointsPath = ref<string>('types.stars');
@@ -12,7 +15,7 @@ const pointsPath = ref<string>('types.stars');
 // name of json section for clusters.
 const clustersPath = ref<string>('types.constellations');
 
-function getPath(data: any, path: string) {
+function getAtPath(data: any, path: string) {
 
 	const parts = path.split('.');
 
@@ -37,16 +40,11 @@ const loadFile = async (files: FileList) => {
 		const fileData = await loadJsonFile<any>(files);
 		if (!fileData) return;
 
-		const pointsData = getPath(fileData, pointsPath.value);
-		const clustersData = getPath(fileData, clustersPath.value);
+		const pointsData = getAtPath(fileData, pointsPath.value);
+		const clustersData = getAtPath(fileData, clustersPath.value);
 
-		const result = decodeAll(pointsData, clustersData);
-		if (!result) {
-			console.warn(`decode failed`);
-		} else {
-
-		}
-
+		const obj = decodeAll(pointsData, clustersData)!;
+		dataStore.mergeFrom(obj);
 
 	} catch (err) {
 		console.error(err);
@@ -84,14 +82,20 @@ async function selectFile(evt: Event) {
 	<div class="absolute left-1/2 top-1/2">
 
 		<input type="text" v-model="fileName">
-		<input type="text" v-model="pointsPath">
-		<input type="text" v-model="clustersPath">
+		<div>
+			<span class="text-xs">path to points data</span>
+			<input type="text" v-model="pointsPath">
+		</div>
+		<div>
+			<span class="text-xs">path to clusters data</span>
+			<input type="text" v-model="clustersPath">
+		</div>
 
 		<button type="button" class="btn" id="drop-file"
 				@click.stop.prevent="fileInputEl?.click()"
 				@drop.prevent="dropFile" @dragover="fileDragOver"
-				title="Import Data">
-			Import
+				title="Load File">
+			Load
 		</button>
 		<input ref="fileInputEl" type="file" accept="text/json text/*"
 			   class="hidden" @change="selectFile($event)">

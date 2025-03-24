@@ -1,5 +1,5 @@
 import { TPoint, type PointData, type TCluster } from "@/types/geom";
-import { NextId } from "@/util/id";
+import { NextId } from "@/util/data";
 
 export function decodeAll(ptsData: any, clusterData: any) {
 
@@ -26,7 +26,8 @@ export const parsePoints = (data: Array<PointData & any>) => {
 		const pos = (rawPt.p as string).split(',').map(v => Number(v));
 		if (pos.length < 2 || Number.isNaN(pos[0]) || Number.isNaN(pos[1])) {
 			console.log(`bad position: ${rawPt} : ${rawPt.p}`);
-			continue;
+			pos.length = 2;
+			pos[0] = pos[1] = 0;
 		}
 		delete rawPt.p;
 

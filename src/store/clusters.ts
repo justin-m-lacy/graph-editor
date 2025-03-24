@@ -1,7 +1,7 @@
 import { useDataStore } from "@/store/data-store";
 import { events } from "@/store/events";
 import { TCluster, type TPoint } from "@/types/geom";
-import { NextId } from "@/util/id";
+import { NextId } from "@/util/data";
 import { defineStore } from "pinia";
 
 export const useClusters = defineStore('clusters', () => {

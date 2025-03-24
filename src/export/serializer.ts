@@ -1,7 +1,7 @@
 import { parseClusters, parsePoints } from "@/export/decode";
 import { encodeClusters, encodePoints } from "@/export/encode";
 import type { TCluster, TPoint } from "@/types/geom";
-import { ResetIds } from "@/util/id";
+import { ResetIds } from "@/util/data";
 import type { Serializer } from "@vueuse/core";
 
 export type AppData = {
