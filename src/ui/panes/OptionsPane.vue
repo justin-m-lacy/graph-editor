@@ -9,8 +9,7 @@ const optsStore = useOptions();
 
 </script>
 <template>
-	<div class="flex flex-col h-full overflow-y-auto
-	 bg-earth-200 min-w-52 border border-black select-none px-1">
+	<div class="flex flex-col h-full ">
 
 		<ColorOpt opt="bgColor" />
 		<ColorOpt opt="ptColor" />

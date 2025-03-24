@@ -23,7 +23,8 @@ export const parsePoints = (data: Array<PointData & any>) => {
 	for (let i = 0; i < data.length; i++) {
 
 		const rawPt = data[i];
-		const pos = (rawPt.p as string).split(',').map(v => Number(v));
+
+		const pos = (rawPt.p as string)?.split(',').map(v => Number(v)) ?? [0, 0];
 		if (pos.length < 2 || Number.isNaN(pos[0]) || Number.isNaN(pos[1])) {
 			console.log(`bad position: ${rawPt} : ${rawPt.p}`);
 			pos.length = 2;
@@ -121,10 +122,10 @@ export const parseClusters = (arrData: any, points: Map<string, TPoint>) => {
 		}
 
 		/// Map human-readable ids to point uids.
-		obj.stars = raw.stars.map((id: string) => idToUid(points, id));
+		obj.stars = raw.stars?.map((id: string) => idToUid(points, id)) ?? [];
 
 		/// Map link star-indices to star uids.
-		obj.links = parseLinks(raw.links, obj.stars, points);
+		obj.links = raw.links ? parseLinks(raw.links, obj.stars, points) : [];
 
 		map.set(obj.uid, obj);
 

@@ -76,10 +76,6 @@ export const useSelect = defineStore('selection', () => {
 		pts.value.length = 0;
 	}
 
-	const top = () => {
-		return pts.value[0] ?? null;
-	}
-
 	events.addListener('delete-pt', (uid: string) => {
 		remove(uid);
 	});
@@ -88,7 +84,7 @@ export const useSelect = defineStore('selection', () => {
 	return {
 
 		get size() { return pts.value.length },
-		top,
+		get top() { return pts.value[0] ?? null },
 		pts,
 		add,
 		remove,

@@ -7,15 +7,13 @@ const emit = defineEmits<{
 	(e: 'close'): void
 }>()
 
-console.log(`merge popup`);
 const fileInputEl = ref<HTMLInputElement>();
 
-
 // name of json section for points.
-const pointsPath = ref<string>('types.stars');
+const pointsPath = ref<string>('types.star');
 
 // name of json section for clusters.
-const clustersPath = ref<string>('types.constellations');
+const clustersPath = ref<string>('types.cluster');
 
 function getAtPath(data: any, path: string) {
 
