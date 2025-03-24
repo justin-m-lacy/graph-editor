@@ -8,12 +8,6 @@ import PointInfo from './panes/PointInfo.vue';
 import ViewPane from './ViewPane.vue';
 
 const select = useSelect();
-
-watch(() => select.top, (newtop) => {
-
-  console.log(`top changed: ${newtop?.uid}`);
-});
-
 </script>
 
 <template>
@@ -25,7 +19,7 @@ watch(() => select.top, (newtop) => {
       <InfoPane class="z-10" />
       <PointInfo class="absolute z-100" />
       <ViewPane />
-      <div class="flex flex-col items-stretch z-10
+      <div class="flex flex-col items-stretch z-10 gap-y-2
         min-w-52 overflow-y-auto bg-earth-200 border border-black select-none px-1">
         <OptionsPane />
         <DataPane v-if="select.top" :obj="select.top" />

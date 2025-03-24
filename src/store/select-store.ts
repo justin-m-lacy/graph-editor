@@ -84,7 +84,7 @@ export const useSelect = defineStore('selection', () => {
 	return {
 
 		get size() { return pts.value.length },
-		get top() { return pts.value[0] ?? null },
+		top: computed(() => pts.value[0] ?? null),
 		pts,
 		add,
 		remove,

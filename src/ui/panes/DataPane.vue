@@ -26,9 +26,9 @@ const values = computed(() => {
 });
 </script>
 <template>
-	<div class="flex flex-col">
+	<div class="flex flex-col px-1 text-sm">
 		<div v-for="[k, v] in values" :key="k" class="flex">
-			<span>{{ k }}:&nbsp;</span>
+			<span class="font-semibold">{{ k }}:&nbsp;</span>
 			<span>{{ v }}</span>
 		</div>
 	</div>

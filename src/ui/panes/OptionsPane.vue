@@ -9,7 +9,7 @@ const optsStore = useOptions();
 
 </script>
 <template>
-	<div class="flex flex-col h-full ">
+	<div class="flex flex-col">
 
 		<ColorOpt opt="bgColor" />
 		<ColorOpt opt="ptColor" />
