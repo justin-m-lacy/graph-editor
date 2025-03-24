@@ -1,3 +1,4 @@
+import { mergeSafe } from "@/util/objecty";
 
 const Ids = new Map<string, number>()
 
@@ -39,7 +40,7 @@ export function mergeValues<T extends Idable>(
 
 		const og = byId[p.id];
 		if (og) {
-
+			mergeSafe(p, og);
 		} else {
 			into.set(p.uid, p);
 		}

@@ -1,7 +1,7 @@
 import { useDataStore } from "@/store/data-store";
 import { events } from "@/store/events";
 import { TPoint } from "@/types/geom";
-import { mergeValues, NextId } from "@/util/data";
+import { NextId } from "@/util/data";
 import { defineStore } from "pinia";
 
 export const usePoints = defineStore('points', () => {
@@ -51,14 +51,6 @@ export const usePoints = defineStore('points', () => {
 		return null;
 	}
 
-	/**
-	 * Merge data from source values into existing data.
-	 * @param values 
-	 */
-	function mergeFrom(values: Map<string, TPoint>) {
-		mergeValues(values, points);
-	}
-
 	const get = (uid: string) => {
 		return points.get(uid);
 	}
@@ -90,7 +82,6 @@ export const usePoints = defineStore('points', () => {
 		get map() { return points; },
 		deletePt,
 		setPoints,
-		mergeFrom,
 		checkId
 
 	}

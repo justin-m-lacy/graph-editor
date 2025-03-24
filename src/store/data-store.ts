@@ -1,6 +1,6 @@
 import { PointSerializer, type AppData } from "@/export/serializer";
 import { useSelect } from "@/store/select-store";
-import { ResetIds } from "@/util/data";
+import { mergeValues, ResetIds } from "@/util/data";
 import { debounceFilter, useLocalStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
 import { TCluster, TPoint } from '../types/geom';
@@ -35,14 +35,8 @@ export const useDataStore = defineStore('save', () => {
 
 		mergeFrom(values: AppData) {
 
-			const inPts = values.points;
-			const inClusters = values.clusters;
-
-
-
-			for (const con of inClusters.values()) {
-
-			}
+			mergeValues(values.points, data.value.points);
+			mergeValues(values.clusters, data.value.clusters);
 
 		},
 

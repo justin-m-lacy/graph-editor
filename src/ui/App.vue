@@ -3,7 +3,6 @@ import Header from './Header.vue';
 import InfoPane from './panes/InfoPane.vue';
 import OptionsPane from './panes/OptionsPane.vue';
 import PointInfo from './panes/PointInfo.vue';
-import MergePopup from './popups/MergePopup.vue';
 import ViewPane from './ViewPane.vue';
 
 </script>
@@ -12,13 +11,9 @@ import ViewPane from './ViewPane.vue';
 
   <div class="flex flex-col h-full w-full min-h-full overflow-hidden">
     <Header></Header>
-    <MergePopup />
     <div class="flex grow w-full h-full">
 
-
       <InfoPane class="z-10" />
-
-
       <PointInfo class="absolute z-100" />
       <ViewPane />
       <OptionsPane class="self-end z-10" />
