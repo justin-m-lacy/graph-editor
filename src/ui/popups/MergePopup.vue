@@ -3,14 +3,13 @@ import { decodeAll } from '@/export/decode';
 import { loadJsonFile } from '@/export/files';
 import { useDataStore } from '@/store/data-store';
 import { useOptions } from '@/store/options-store';
+import { useFileSelect } from '../composables/file-select';
 
 const emit = defineEmits<{
 	(e: 'close'): void
 }>()
 
 const options = useOptions();
-
-const fileInputEl = ref<HTMLInputElement>();
 
 function getAtPath(data: any, path: string) {
 
@@ -50,6 +49,8 @@ const loadAndMerge = async (files: FileList) => {
 	}
 }
 
+const selectFile = useFileSelect(loadAndMerge);
+
 const fileDragOver = (e: DragEvent) => {
 	e.preventDefault();
 	e.dataTransfer!.dropEffect = 'copy';
@@ -62,20 +63,6 @@ function dropFile(e: DragEvent) {
 	}
 }
 
-async function selectFile(evt: Event) {
-
-	try {
-
-		const files = (evt.target as HTMLInputElement).files;
-		if (files && files.length > 0) {
-			await loadAndMerge(files);
-		}
-	} catch (err) {
-		console.error(err);
-	} finally {
-		(evt.target as HTMLInputElement).value = '';
-	}
-}
 </script>
 <template>
 	<div class="fixed left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2
@@ -95,12 +82,10 @@ async function selectFile(evt: Event) {
 		</div>
 
 		<button type="button" class=""
-				@click.stop.prevent="fileInputEl?.click()"
+				@click.stop.prevent="selectFile.open"
 				@drop.prevent="dropFile" @dragover="fileDragOver"
 				title="Load File">
 			Load
 		</button>
-		<input ref="fileInputEl" type="file" accept="text/json text/*"
-			   class="hidden" @change="selectFile($event)">
 	</div>
 </template>

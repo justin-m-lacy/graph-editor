@@ -2,6 +2,7 @@
 import { loadJsonStr, useFileLink } from '@/export/files';
 import { useDataStore } from '@/store/data-store';
 import MergePopup from '@/ui/popups/MergePopup.vue';
+import { useFileSelect } from './composables/file-select';
 
 const showMerge = ref(false);
 
@@ -14,26 +15,9 @@ function openMerge() {
 	showMerge.value = true;
 }
 
-const fileInput = ref<HTMLInputElement>();
+const fileSelect = useFileSelect(loadFile);
 
-const fileSelect = async (event: Event) => {
-
-	try {
-
-		const files = (event.target as HTMLInputElement).files;
-		if (files && files.length > 0) {
-			await loadFile(files);
-		}
-
-	} catch (err) {
-		console.error(err);
-	} finally {
-		(event.target as HTMLInputElement).value = '';
-	}
-
-}
-
-const loadFile = async (files: FileList) => {
+async function loadFile(files: FileList) {
 	try {
 		const fileData = await loadJsonStr(files);
 		useDataStore().setData(fileData!);
@@ -64,14 +48,11 @@ const fileDrag = (e: DragEvent) => {
 		 v-bind="$attrs">
 		<button type="button" @click="exportData">Export</button>
 		<button type="button"
-				@click.stop.prevent="fileInput?.click()"
+				@click.stop.prevent="fileSelect.open"
 				@drop.prevent="fileDrop" @dragover="fileDrag"
 				title="Import Data">
 			[Import]
 		</button>
 		<button type="button" class="" @click="openMerge">Merge...</button>
-
-		<input ref="fileInput" type="file" accept="text/json text/*"
-			   class="hidden" @change="fileSelect($event)">
 	</div>
 </template>
