@@ -2,18 +2,15 @@
 import { decodeAll } from '@/export/decode';
 import { loadJsonFile } from '@/export/files';
 import { useDataStore } from '@/store/data-store';
+import { useOptions } from '@/store/options-store';
 
 const emit = defineEmits<{
 	(e: 'close'): void
 }>()
 
+const options = useOptions();
+
 const fileInputEl = ref<HTMLInputElement>();
-
-// name of json section for points.
-const pointsPath = ref<string>('types.star');
-
-// name of json section for clusters.
-const clustersPath = ref<string>('types.cluster');
 
 function getAtPath(data: any, path: string) {
 
@@ -40,8 +37,8 @@ const loadAndMerge = async (files: FileList) => {
 		const fileData = await loadJsonFile<any>(files);
 		if (!fileData) return;
 
-		const pointsData = getAtPath(fileData, pointsPath.value);
-		const clustersData = getAtPath(fileData, clustersPath.value);
+		const pointsData = getAtPath(fileData, options.pointsPath ?? '');
+		const clustersData = getAtPath(fileData, options.clustersPath ?? '');
 
 		const obj = decodeAll(pointsData, clustersData)!;
 		useDataStore().mergeFrom(obj);
@@ -90,11 +87,11 @@ async function selectFile(evt: Event) {
 
 		<div class="flex flex-col">
 			<span class="text-xxs">path to points data</span>
-			<input type="text" class="pl-1" v-model="pointsPath">
+			<input type="text" class="pl-1" v-model="options.pointsPath">
 		</div>
 		<div class="flex flex-col">
 			<span class="text-xxs">path to clusters data</span>
-			<input type="text" class="pl-1" v-model="clustersPath">
+			<input type="text" class="pl-1" v-model="options.clustersPath">
 		</div>
 
 		<button type="button" class=""

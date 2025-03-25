@@ -10,7 +10,6 @@ const values = computed(() => {
 	const arr: Array<[string, any]> = [];
 
 	for (const k in props.obj) {
-		console.log(`k: ${k}`);
 		const v = props.obj[k];
 		if (typeof v === 'object') {
 			arr.push([k, JSON.stringify(v)]);

@@ -26,11 +26,8 @@ export const useViewDrag = (elRef: Ref<HTMLElement | undefined>,
 
 		dragging.value = true;
 
-		const tx = startPt.x + (evt.clientX - clickPt.x) / view.scale;
-		const ty = startPt.y + (evt.clientY - clickPt.y) / view.scale;
-
-		view.tx = tx;
-		view.ty = ty;
+		view.tx = startPt.x + (evt.clientX - clickPt.x) / view.scale;
+		view.ty = startPt.y + (evt.clientY - clickPt.y) / view.scale;
 
 	}
 

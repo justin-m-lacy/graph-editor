@@ -8,6 +8,8 @@ type TOpts = {
 	lineColor?: string,
 	lineSelectColor?: string;
 	hideClusters?: boolean;
+	pointsPath?: string;
+	clustersPath?: string,
 	blur?: boolean | number
 }
 
@@ -36,6 +38,12 @@ export const useOptions = defineStore('options', () => {
 	const hideClusters = makeOpt(opts, 'hideClusters');
 	const lineSelectColor = makeOpt(opts, 'lineSelectColor', '#ee0000');
 
+	// path to points for imports/exports
+	const pointsPath = makeOpt(opts, 'pointsPath', 'types.star');
+	// path to clusters for imports/exports
+	const clustersPath = makeOpt(opts, 'clustersPath', 'types.cluster');
+
+
 	return {
 
 		opts,
@@ -46,6 +54,9 @@ export const useOptions = defineStore('options', () => {
 		lineColor,
 		lineSelectColor,
 		hideClusters,
+
+		pointsPath,
+		clustersPath,
 
 		setVal<K extends keyof TOpts>(s: K, v: TOpts[K]) {
 			opts.value[s] = v;
