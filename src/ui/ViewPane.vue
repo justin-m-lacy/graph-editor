@@ -118,14 +118,13 @@ const selPoint = (evt: MouseEvent, p: TPoint) => {
 
 const selAllPoint = (evt: MouseEvent, p: TPoint) => {
 
+	selPoint(evt, p);
 	if (clusters.selected?.stars.some(s => s == p.uid)) {
 		select.selectAllIn(clusters.selected);
-	} else {
-		selPoint(evt, p);
-		if (clusters.selected) {
-			select.selectAllIn(clusters.selected);
-		}
+		select.selectTop(p);
 	}
+	draggingPt = false;
+
 
 }
 

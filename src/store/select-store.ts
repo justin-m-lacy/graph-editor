@@ -23,6 +23,17 @@ export const useSelect = defineStore('selection', () => {
 		events.emit('select-pt', p.uid);
 	}
 
+	/**
+	 * move point to top of selection.
+	 * @param p 
+	 */
+	const selectTop = (p: TPoint) => {
+
+		remove(p.uid);
+		pts.value.unshift(p);
+
+	}
+
 	const selectAllIn = (con: TCluster) => {
 
 		const points = usePoints();
@@ -91,6 +102,7 @@ export const useSelect = defineStore('selection', () => {
 		toggle,
 		clear,
 		select,
+		selectTop,
 		selectPts,
 		selectAllIn,
 		has
