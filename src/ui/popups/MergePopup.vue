@@ -33,6 +33,7 @@ function getAtPath(data: any, path: string) {
 
 const loadAndMerge = async (files: FileList) => {
 	try {
+
 		const fileData = await loadJsonFile<any>(files);
 		if (!fileData) return;
 

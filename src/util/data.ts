@@ -40,7 +40,7 @@ export function mergeValues<T extends Idable>(
 
 		const og = byId[p.id];
 		if (og) {
-			mergeSafe(p, og);
+			mergeSafe(og, p);
 		} else {
 			into.set(p.uid, p);
 		}

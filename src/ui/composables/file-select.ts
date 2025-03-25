@@ -10,7 +10,9 @@ export const useFileSelect = (
 	input.type = 'file';
 	input.accept = accept;
 
-	useEventListener(input, 'click', async (_) => {
+	document.body.appendChild(input);
+
+	useEventListener(input, 'change', async (_) => {
 
 		try {
 			if (input.files) await onSelect(input.files);

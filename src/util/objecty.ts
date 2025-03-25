@@ -67,7 +67,7 @@ export function mergeSafe(dest: object & any, src: object & any, exclude?: strin
 			const srcSub = src[p];
 
 			if (srcSub === undefined || srcSub === null) continue;
-			else if (destSub === undefined || destSub === null) {
+			else if (destSub === undefined || destSub === null || destSub === '') {
 
 				if (typeof srcSub !== 'object') dest[p] = srcSub;
 				else dest[p] = clone(srcSub);
