@@ -14,7 +14,7 @@ const points = usePoints();
 const view = useViewStore();
 
 const elRef = shallowRef<HTMLElement>();
-const topPt = shallowRef<TPoint | null>(null);
+const topPt = ref<TPoint | null>(null);
 
 const dragOffset = { x: 0, y: 0 };
 

@@ -7,8 +7,8 @@ const props = defineProps<{
 const localId = shallowRef<string>(props.it.id);
 const error = shallowRef<boolean>(false);
 
-watch(()=>props.it, (item)=>{
-	localId.value=item.id;
+watch(() => props.it?.id, (newId) => {
+	localId.value = newId;
 })
 
 const onInput = (v: Event) => {
