@@ -16,9 +16,9 @@ const select = useSelect();
     <Header></Header>
     <div class="flex grow w-full h-full overflow-hidden">
 
-      <div class="flex flex-col">
-        <InfoPane class="z-10" />
-      </div>
+
+      <InfoPane class="z-10" />
+
       <PointInfo class="absolute z-100" />
       <ViewPane />
       <div class="flex flex-col items-stretch z-10 gap-y-2 w-52
