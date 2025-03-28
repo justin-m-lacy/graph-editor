@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useSelect } from '@/store/select-store';
 import Header from './Header.vue';
+import AllPoints from './panes/AllPoints.vue';
 import DataPane from './panes/DataPane.vue';
 import InfoPane from './panes/InfoPane.vue';
 import OptionsPane from './panes/OptionsPane.vue';
@@ -22,9 +23,10 @@ const select = useSelect();
       <PointInfo class="absolute z-100" />
       <ViewPane />
       <div class="flex flex-col items-stretch z-10 gap-y-2 w-52
-        min-w-52 overflow-y-auto bg-earth-200 border border-black select-none px-1">
+        min-w-52 overflow-y-auto bg-earth-200 border border-black select-none">
         <OptionsPane />
         <DataPane v-if="select.top" :obj="select.top" />
+        <AllPoints />
       </div>
 
     </div>
