@@ -28,7 +28,8 @@ const selPoint = (evt: MouseEvent, p: TPoint) => {
 	<div class="flex flex-col">
 		<div class="header" @click="minimize = !minimize">Points</div>
 		<div v-if="!minimize" v-for="p in sorted"
-			 class="flex border-b border-b-gray-700 px-2"
+			 class="flex border-b justify-between border-b-gray-700 px-2"
+			 :class="select.has(p.uid) ? 'font-bold' : ''"
 			 @click="selPoint($event, p)">
 			<div>{{ p.id }}</div><span v-if="'name' in p && p.name">{{ p.name }}</span>
 		</div>
